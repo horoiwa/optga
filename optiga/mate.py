@@ -9,7 +9,7 @@ class AbstractBaseMate(mateclass=ABCMeta):
         pass
 
     def mate(self, population):
-        run_mate()
+        self.run_mate()
 
     @abstractmethod
     def run_mate(self):
