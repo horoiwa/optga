@@ -30,10 +30,10 @@ def main():
 
     optimizer = Optimizer(samples=init_popualtion)
 
-    model = get_onemax_model()
-    optimizer.add_objective("ones", model, direction="maximize")
+    model1 = get_onemax_model()
+    optimizer.add_objective("ones", model1, direction="maximize")
 
-    model = get_linear_model(length)
-    optimizer.add_objective("linear", model, direction="maximize")
+    model2 = get_linear_model(length)
+    optimizer.add_objective("linear", model2, direction="maximize")
 
     optimizer.run(population_size=10, n_gen=1)
