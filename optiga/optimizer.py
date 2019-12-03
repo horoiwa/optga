@@ -5,19 +5,19 @@ import pandas as pd
 from deap import creator
 
 from optiga.config import OptConfig
-from optiga.evaluater import Evaluator, OneMaxEvaluator
+from optiga.evaluater import Evaluator
 from optiga.spawner import Spawner
-from optiga.strategy import Strategy
+from optiga.strategy import EvolutionStrategy
 
 
 class Optimizer:
 
-    def __init__(self, sample):
+    def __init__(self, samples):
 
-        if not isinstance(sample, pd.DataFrame):
+        if not isinstance(samples, pd.DataFrame):
             raise Exception("Sample data must be DataFrame")
 
-        self.sample = sample
+        self.samples = samples
 
         self.config = OptConfig()
 
@@ -25,22 +25,26 @@ class Optimizer:
 
         self.group_constraints = {}
 
-        self.config.limits = self._get_limits(self.sample)
+        self.config.limits = self._get_limits(self.samples)
 
         self.models = {}
 
-        self.prep()
-
-    def prep(self):
-
-        self.evaluator = Evaluator(self.config, self.models)
-
-        self.spawner = Spawner(self.config)
-
-        self.strategy = Strategy(self.config)
-
     def add_objective(self, objname, model, direction):
-        raise NotImplementedError()
+        #: validate model using samples
+        try:
+            model.predict(self.samples)
+        except:
+            raise Exception("Invalid prediction model")
+
+        if direction not in ["maximize", "minimize"]:
+            raise KeyError(f'direction must be "maximize" or "minimize"')
+
+        self.models[objname] = model
+
+        if not self.config.objectives:
+            self.config.objectives = {objname: direction}
+        else:
+            self.config.objectives[objname] = direction
 
     def add_single_constraint(self, constraint_type, group_name, fnames):
         raise NotImplementedError()
@@ -48,15 +52,16 @@ class Optimizer:
     def add_group_constraint(self, constraint_type, group_name, fnames):
         raise NotImplementedError()
 
-    def run(self, n_gen, logfile=False):
+    def run(self, population_size, n_gen, logfile=False):
         """run evolutional optimization
         Todo: 最初と最後だけIndividualになる方式で
 
         Parameters
         ----------
+        population_size : int
+            number of individuals of one generation
         n_gen : int
             number of generation
-        ""[summary]
         """
         logger = getLogger("RUN_GA")
         logger.setLevel(DEBUG)
@@ -69,12 +74,20 @@ class Optimizer:
         logger.info(f"Start GA optimization: {n_gen} gens")
         logger.info(f"Settings:\n{self.show_config(stdout=False)}")
 
-        self.prep()
+        self._prep()
+        self._validate()
 
-        self._validate_models()
+        population = self.spawner.spawn(population_size)
+        for n in range(n_gen):
+            logger.info("====Generation {n} ====")
+            population = self.run_generation(population, population_size)
 
-    def run_epoch(self):
-        pass
+    def run_generation(self, population, population_size):
+
+        offspring = pd.DataFrame(population, columns=self.config.feature_names)
+        fitness = self.evaluator.evaluate(offspring)
+        print(fitness)
+        return offspring
 
     def save_config(self, path=None):
         path = "config.json" if not path else path
@@ -94,8 +107,30 @@ class Optimizer:
                            sample[col].max()]
         return limits
 
-    def _validate_models(self):
-        pass
+    def _prep(self):
+
+        self.spawner = Spawner(self.config)
+
+        self.strategy = EvolutionStrategy(self.config)
+
+        self.evaluator = Evaluator(self.config, self.models)
+
+    def _validate(self):
+        if not self.config.objectives:
+            raise Exception("Objective not found")
+        elif not len(self.models):
+            raise Exception("Model not found")
+
+        for key in self.config.objectives.keys():
+            if key not in self.models:
+                raise Exception(f"model {key} not found")
+
+        if None in self.config.weights:
+            raise Exception("Unexpected Error")
+
 
 class IslandsOptimizer(Optimizer):
-    pass
+
+    def __init__(self, samples, n_jobs):
+        super().__init__(samples)
+        self.n_jobs = n_jobs

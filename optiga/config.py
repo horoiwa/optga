@@ -25,6 +25,12 @@ class OptConfig:
     group_constraints: Dict[str, List[int]] = None
 
     @property
+    def weights(self):
+        fitness = [1.0 if val == "maximize" else -1.0 if "minimize" else None
+                   for val in self.objectives.values()]
+        return fitness
+
+    @property
     def upperlim(self):
         return [val[1] for val in self.limits.values()]
 
