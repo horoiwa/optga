@@ -36,4 +36,4 @@ def main():
     model2 = get_linear_model(length)
     optimizer.add_objective("linear", model2, direction="maximize")
 
-    optimizer.run(population_size=10, n_gen=1)
+    optimizer.run(population_size=pop_size, n_gen=1)

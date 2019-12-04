@@ -6,8 +6,10 @@ import numpy as np
 
 class BaseMate:
 
-    def __init__(self, birth_rate):
-        self.birth_rate = birth_rate
+    def __init__(self, config):
+        self.config = config
+
+        self.birth_rate = self.config.birth_rate
 
     @abstractmethod
     def mate(self, population):
@@ -22,11 +24,11 @@ class MateCxTwoPoints(BaseMate):
             np.vstack([population_clone for _ in range(self.birth_rate)]))
         population = np.vstack([population for _ in range(self.birth_rate)])
 
-        cxpoints = [(min(a, b), max(a, b))
+        cxpoints = [(min(a, b), max(a, b)) if a != b else (a-1, b+1)
                     for a, b in zip(
-                        np.random.randint(0, population.shape[1],
+                        np.random.randint(1, population.shape[1]-1,
                                           population.shape[0]),
-                        np.random.randint(0, population.shape[1],
+                        np.random.randint(1, population.shape[1]-1,
                                           population.shape[0]))]
 
         mask = np.ones(population.shape)

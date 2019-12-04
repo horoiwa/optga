@@ -15,6 +15,10 @@ class OptConfig:
 
     birth_rate: int = 1
 
+    mutpb: float = 0.2
+
+    indpb: float = 0.1
+
     objectives: Dict[str, str] = None
 
     #: upperlim and lowerlim

@@ -1,10 +1,8 @@
-from abc import abstractmethod
 
 
-class SelectNSGA2:
+def SelectNSGA2(population, size):
+    return population
 
-    def __init__(self):
-        pass
 
-    def select(self, population, size):
-        return population
+def SelectNSGA2Deap(population, size):
+    return population

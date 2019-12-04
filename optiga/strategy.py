@@ -8,9 +8,11 @@ class EvolutionStrategy:
     def __init__(self, config):
         self.config = config
 
-        self.mater = globals()[self.config.mate](self.config.birth_rate)
+        self.mater = globals()[self.config.mate](self.config)
 
-        self.mutater = globals()[self.config.mutate]()
+        self.mutater = globals()[self.config.mutate](self.config)
+
+        self.selecter = globals()[self.config.select]
 
     def mate(self, population):
 

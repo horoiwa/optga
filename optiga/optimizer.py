@@ -84,11 +84,20 @@ class Optimizer:
 
     def run_generation(self, population, population_size):
 
+        import time
         print(population)
         print()
+
         offspring = self.strategy.mate(population)
+
+        start = time.time()
         print(offspring)
+        print()
+
         offspring = self.strategy.mutate(offspring)
+
+        print(offspring)
+        print("Mutate:", time.time()-start)
 
         offspring = pd.DataFrame(population, columns=self.config.feature_names)
         fitness = self.evaluator.evaluate(offspring)
