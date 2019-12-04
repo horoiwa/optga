@@ -23,8 +23,8 @@ def main():
 
     logger.info("Start Main test")
 
-    pop_size = 30
-    length = 10
+    pop_size = 10
+    length = 5
 
     init_popualtion = get_onemax_samples(pop_size, length)
 

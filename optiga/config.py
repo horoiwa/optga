@@ -7,11 +7,13 @@ from typing import Dict, List
 @dataclass
 class OptConfig:
 
-    mate: str = "CxTwoPointsMate"
+    mate: str = "MateCxTwoPoints"
 
-    mutate: str = "UniformMutation"
+    mutate: str = "MutateUniform"
 
     select: str = "SelectNSGA2"
+
+    birth_rate: int = 1
 
     objectives: Dict[str, str] = None
 

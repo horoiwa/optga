@@ -34,7 +34,7 @@ class Optimizer:
         try:
             model.predict(self.samples)
         except:
-            raise Exception("Invalid prediction model")
+            raise Exception("Invalid predict model")
 
         if direction not in ["maximize", "minimize"]:
             raise KeyError(f'direction must be "maximize" or "minimize"')
@@ -77,16 +77,24 @@ class Optimizer:
         self._prep()
         self._validate()
 
-        population = self.spawner.spawn(population_size)
+        population = self.spawner.spawn(population_size).values
         for n in range(n_gen):
             logger.info("====Generation {n} ====")
             population = self.run_generation(population, population_size)
 
     def run_generation(self, population, population_size):
 
+        print(population)
+        print()
+        offspring = self.strategy.mate(population)
+        print(offspring)
+        offspring = self.strategy.mutate(offspring)
+
         offspring = pd.DataFrame(population, columns=self.config.feature_names)
         fitness = self.evaluator.evaluate(offspring)
-        print(fitness)
+
+        offspring = self.strategy.select(offspring, population_size)
+
         return offspring
 
     def save_config(self, path=None):
