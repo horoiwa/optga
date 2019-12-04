@@ -26,6 +26,6 @@ class EvolutionStrategy:
 
         return offspring
 
-    def select(self, population, size):
+    def select(self, population, fitness, size):
 
         return population

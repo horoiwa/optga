@@ -1,8 +1,8 @@
 
 
-def SelectNSGA2(population, size):
+def SelectNSGA2(population, fitness, size):
     return population
 
 
-def SelectNSGA2Deap(population, size):
+def SelectNSGA2Deap(population, fitness, size):
     return population

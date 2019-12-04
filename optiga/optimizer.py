@@ -1,4 +1,5 @@
 from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
+import copy
 
 import numpy as np
 import pandas as pd
@@ -83,28 +84,29 @@ class Optimizer:
             population = self.run_generation(population, population_size)
 
     def run_generation(self, population, population_size):
-
         import time
-        print(population)
+        ancestor = copy.deepcopy(population)
+
+        print(ancestor)
         print()
 
-        offspring = self.strategy.mate(population)
+        children = self.strategy.mate(population)
 
         start = time.time()
-        print(offspring)
+        print(children)
         print()
 
-        offspring = self.strategy.mutate(offspring)
+        children = self.strategy.mutate(children)
 
-        print(offspring)
+        print(children)
         print("Mutate:", time.time()-start)
 
-        offspring = pd.DataFrame(population, columns=self.config.feature_names)
+        offspring = pd.DataFrame(np.vstack([ancestor, children]),
+                                 columns=self.config.feature_names)
         fitness = self.evaluator.evaluate(offspring)
+        next_population = self.strategy.select(offspring, fitness, population_size)
 
-        offspring = self.strategy.select(offspring, population_size)
-
-        return offspring
+        return next_population
 
     def save_config(self, path=None):
         path = "config.json" if not path else path

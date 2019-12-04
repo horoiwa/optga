@@ -40,8 +40,8 @@ class MateCxTwoPoints(BaseMate):
         population *= mask
         population_clone *= ~mask
 
-        offspring = population + population_clone
-        return offspring
+        children = population + population_clone
+        return children
 
 
 if __name__ == "__main__":
