@@ -1,5 +1,6 @@
 from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
 import copy
+from collections import defaultdict
 
 import numpy as np
 import pandas as pd
@@ -29,6 +30,10 @@ class Optimizer:
         self.config.limits = self._get_limits(self.samples)
 
         self.models = {}
+
+        self.history = {}
+
+        self.pareto_fronts = None
 
     def add_objective(self, objname, model, direction):
         #: validate model using samples
@@ -75,38 +80,53 @@ class Optimizer:
         logger.info(f"Start GA optimization: {n_gen} gens")
         logger.info(f"Settings:\n{self.show_config(stdout=False)}")
 
-        self._prep()
+        self._init_envs()
         self._validate()
+        history = defaultdict(lambda: {"Average": [],
+                                       "MAX": [],
+                                       "MIN": []})
 
         population = self.spawner.spawn(population_size).values
         for n in range(n_gen):
-            logger.info("====Generation {n} ====")
-            population = self.run_generation(population, population_size)
+            population, stats = self.run_generation(population,
+                                                    population_size)
+            for obj_name in self.config.objective_names:
+                history[obj_name]["Average"].append(
+                    stats.loc[obj_name, "Average"])
+                history[obj_name]["MAX"].append(
+                    stats.loc[obj_name, "MAX"])
+                history[obj_name]["MIN"].append(
+                    stats.loc[obj_name, "MIN"])
+
+            if n % 10 == 0:
+                logger.info(f"====Generation {n} ====")
+                logger.info(stats)
+
+        logger.info("GA optimization finished gracefully")
+        for obj_name in self.config.objective_names:
+            logger.info(f"====GA RESULT: {obj_name} ====")
+            df = self._get_history(history, obj_name)
+            self.history[obj_name] = df
+            logger.info(df)
 
     def run_generation(self, population, population_size):
-        import time
+
         ancestor = copy.deepcopy(population)
 
-        print(ancestor)
-        print()
-
         children = self.strategy.mate(population)
-
-        start = time.time()
-        print(children)
-        print()
-
         children = self.strategy.mutate(children)
-
-        print(children)
-        print("Mutate:", time.time()-start)
 
         offspring = pd.DataFrame(np.vstack([ancestor, children]),
                                  columns=self.config.feature_names)
         fitness = self.evaluator.evaluate(offspring)
-        next_population = self.strategy.select(offspring, fitness, population_size)
+        stats = self._get_stats(fitness)
+        weighted_fitness = fitness * self.config.weights
 
-        return next_population
+        next_population = self.strategy.select(offspring.values,
+                                               weighted_fitness,
+                                               population_size)
+
+        return next_population, stats
 
     def save_config(self, path=None):
         path = "config.json" if not path else path
@@ -126,7 +146,24 @@ class Optimizer:
                            sample[col].max()]
         return limits
 
-    def _prep(self):
+    def _get_stats(self, fitness=None):
+        stats = pd.DataFrame(index=self.config.objective_names)
+        if fitness is None:
+            return stats.T
+        else:
+            stats["MAX"] = fitness.max(0)
+            stats["MIN"] = fitness.min(0)
+            stats["Average"] = fitness.mean(0)
+            return stats
+
+    def _get_history(self, history, obj_name):
+        df = pd.DataFrame()
+        df["MAX"] = history[obj_name]["MAX"]
+        df["MIN"] = history[obj_name]["MIN"]
+        df["Average"] = history[obj_name]["Average"]
+        return df
+
+    def _init_envs(self):
 
         self.spawner = Spawner(self.config)
 
@@ -148,7 +185,7 @@ class Optimizer:
             raise Exception("Unexpected Error")
 
 
-class IslandsOptimizer(Optimizer):
+class PallarelOptimizer(Optimizer):
 
     def __init__(self, samples, n_jobs):
         super().__init__(samples)

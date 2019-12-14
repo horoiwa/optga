@@ -2,6 +2,8 @@ from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from typing import Dict, List
 
+import numpy as np
+
 
 @dataclass_json
 @dataclass
@@ -13,7 +15,7 @@ class OptConfig:
 
     select: str = "SelectNSGA2"
 
-    birth_rate: int = 1
+    birth_rate: int = 2
 
     mutpb: float = 0.2
 
@@ -32,9 +34,9 @@ class OptConfig:
 
     @property
     def weights(self):
-        fitness = [1.0 if val == "maximize" else -1.0 if "minimize" else None
+        weights = [1.0 if val == "maximize" else -1.0 if "minimize" else None
                    for val in self.objectives.values()]
-        return fitness
+        return np.array(weights)
 
     @property
     def upperlim(self):
@@ -43,6 +45,10 @@ class OptConfig:
     @property
     def lowerlim(self):
         return [val[0] for val in self.limits.values()]
+
+    @property
+    def objective_names(self):
+        return [key for key in self.objectives.keys()]
 
     @property
     def feature_names(self):

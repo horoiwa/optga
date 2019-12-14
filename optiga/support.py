@@ -28,4 +28,10 @@ def get_linear_model(length):
                 raise TypeError("Samples must be DataFrame")
             return np.dot(samples, self.weights)
 
+        def get_max_value(self):
+            return self.weights[self.weights > 0].sum()
+
+        def get_min_value(self):
+            return self.weights[self.weights <= 0].sum()
+
     return model(length)

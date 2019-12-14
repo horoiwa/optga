@@ -23,8 +23,8 @@ def main():
 
     logger.info("Start Main test")
 
-    pop_size = 10
-    length = 5
+    pop_size = 1000
+    length = 100
 
     init_popualtion = get_onemax_samples(pop_size, length)
 
@@ -34,6 +34,11 @@ def main():
     optimizer.add_objective("ones", model1, direction="maximize")
 
     model2 = get_linear_model(length)
-    optimizer.add_objective("linear", model2, direction="maximize")
 
-    optimizer.run(population_size=pop_size, n_gen=1)
+    print("Model1 MAX:", length)
+    print("Model2 MAX:", model2.get_max_value())
+    print("Model2 MIN:", model2.get_min_value())
+
+    optimizer.add_objective("linear", model2, direction="minimize")
+
+    optimizer.run(population_size=pop_size, n_gen=300)

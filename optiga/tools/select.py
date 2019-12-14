@@ -1,8 +1,6 @@
+from optiga.tools.nsga2 import NSGA2
 
 
 def SelectNSGA2(population, fitness, size):
-    return population
-
-
-def SelectNSGA2Deap(population, fitness, size):
-    return population
+    next_population = NSGA2(population, fitness, size)
+    return next_population

@@ -28,4 +28,6 @@ class EvolutionStrategy:
 
     def select(self, population, fitness, size):
 
-        return population
+        selected_population = self.selecter(population, fitness, size)
+
+        return selected_population
