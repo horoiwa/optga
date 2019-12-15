@@ -1,5 +1,7 @@
 from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
 
+import matplotlib.pyplot as plt
+
 from optiga import __version__
 from optiga.optimizer import Optimizer
 from optiga.support import (get_linear_model, get_onemax_model,
@@ -23,7 +25,7 @@ def main():
 
     logger.info("Start Main test")
 
-    pop_size = 1000
+    pop_size = 500
     length = 100
 
     init_popualtion = get_onemax_samples(pop_size, length)
@@ -34,11 +36,22 @@ def main():
     optimizer.add_objective("ones", model1, direction="maximize")
 
     model2 = get_linear_model(length)
+    optimizer.add_objective("linear_min", model2, direction="minimize")
 
-    print("Model1 MAX:", length)
-    print("Model2 MAX:", model2.get_max_value())
-    print("Model2 MIN:", model2.get_min_value())
-
-    optimizer.add_objective("linear", model2, direction="minimize")
+    if True:
+        model3 = get_linear_model(length)
+        optimizer.add_objective("linear_max", model3, direction="maximize")
 
     optimizer.run(population_size=pop_size, n_gen=300)
+
+    print("Result")
+    Y = optimizer.pareto_front["Y"]
+    sample_Y = optimizer.pareto_front["sample_Y"]
+    print(Y.shape)
+    plt.scatter(Y['ones'], Y['linear_min'])
+    plt.scatter(sample_Y['ones'], sample_Y['linear_min'])
+    plt.show()
+
+    print("Model1 MAX:", length)
+    print("Model2 MIN:", model2.get_min_value())
+    #print("Model3 MAX:", model3.get_max_value())

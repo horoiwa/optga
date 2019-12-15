@@ -15,7 +15,7 @@ class OptConfig:
 
     select: str = "SelectNSGA2"
 
-    birth_rate: int = 2
+    birth_rate: int = 3
 
     mutpb: float = 0.2
 

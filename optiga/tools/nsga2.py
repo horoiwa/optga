@@ -16,6 +16,13 @@ def NSGA2(population, fitness, k):
     return next_population
 
 
+def get_paretofront(population, fitness):
+    fitness = fitness.astype(np.float64)
+    dominate_table = get_dominatetable(fitness)
+    front = get_fronts(dominate_table, k=1)
+    return population[front[0]]
+
+
 @jit(i8[:, :](f8[:, :]), nopython=True)
 def get_dominatetable(fitness):
     n_fits = fitness.shape[0]
@@ -47,7 +54,8 @@ def get_fronts(dominate_table, k):
         rank = dominate_table.sum(1)
 
         #: すでに選ばれているインデックスは除外する
-        current_front = list(np.setdiff1d(np.where(rank == 0)[0], selected_indices))
+        current_front = list(np.setdiff1d(np.where(rank == 0)[0], 
+                             selected_indices))
         fronts.append(current_front)
         selected_indices += current_front
 

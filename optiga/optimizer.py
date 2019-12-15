@@ -10,6 +10,7 @@ from optiga.config import OptConfig
 from optiga.evaluater import Evaluator
 from optiga.spawner import Spawner
 from optiga.strategy import EvolutionStrategy
+from optiga.tools.nsga2 import get_paretofront
 
 
 class Optimizer:
@@ -33,7 +34,7 @@ class Optimizer:
 
         self.history = {}
 
-        self.pareto_fronts = None
+        self.pareto_front = {} 
 
     def add_objective(self, objname, model, direction):
         #: validate model using samples
@@ -109,6 +110,8 @@ class Optimizer:
             self.history[obj_name] = df
             logger.info(df)
 
+        self._set_pareto_front(population)
+
     def run_generation(self, population, population_size):
 
         ancestor = copy.deepcopy(population)
@@ -162,6 +165,27 @@ class Optimizer:
         df["MIN"] = history[obj_name]["MIN"]
         df["Average"] = history[obj_name]["Average"]
         return df
+
+    def _set_pareto_front(self, population):
+        population = pd.DataFrame(population,
+                                  columns=self.config.feature_names)
+        fitness = self.evaluator.evaluate(population)
+        weighted_fitness = fitness * self.config.weights
+
+        pareto_front = get_paretofront(population.values, weighted_fitness)
+        pareto_front = pd.DataFrame(pareto_front,
+                                    columns=self.config.feature_names)
+
+        pareto_fitness = self.evaluator.evaluate(pareto_front)
+        pareto_fitness = pd.DataFrame(pareto_fitness,
+                                      columns=self.config.objective_names)
+
+        self.pareto_front["X"] = pareto_front
+        self.pareto_front["Y"] = pareto_fitness
+
+        self.pareto_front["sample_X"] = self.samples
+        self.pareto_front["sample_Y"] = pd.DataFrame(self.evaluator.evaluate(self.samples),
+                                                     columns=self.config.objective_names)
 
     def _init_envs(self):
 
