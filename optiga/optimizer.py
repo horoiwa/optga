@@ -34,7 +34,7 @@ class Optimizer:
 
         self.history = {}
 
-        self.pareto_front = {} 
+        self.pareto_front = {}
 
     def add_objective(self, objname, model, direction):
         #: validate model using samples
@@ -110,7 +110,7 @@ class Optimizer:
             self.history[obj_name] = df
             logger.info(df)
 
-        self._set_pareto_front(population)
+        self._post_run(population)
 
     def run_generation(self, population, population_size):
 
@@ -166,7 +166,7 @@ class Optimizer:
         df["Average"] = history[obj_name]["Average"]
         return df
 
-    def _set_pareto_front(self, population):
+    def _post_run(self, population):
         population = pd.DataFrame(population,
                                   columns=self.config.feature_names)
         fitness = self.evaluator.evaluate(population)
@@ -186,7 +186,6 @@ class Optimizer:
         self.pareto_front["sample_X"] = self.samples
         self.pareto_front["sample_Y"] = pd.DataFrame(self.evaluator.evaluate(self.samples),
                                                      columns=self.config.objective_names)
-
     def _init_envs(self):
 
         self.spawner = Spawner(self.config)

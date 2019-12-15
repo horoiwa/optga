@@ -1,1 +1,0 @@
-BIRTH_RATE = 2

@@ -1,4 +1,5 @@
 from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
+import pickle
 
 import matplotlib.pyplot as plt
 
@@ -26,7 +27,7 @@ def main():
     logger.info("Start Main test")
 
     pop_size = 500
-    length = 100
+    length = 20
 
     init_popualtion = get_onemax_samples(pop_size, length)
 
@@ -38,20 +39,24 @@ def main():
     model2 = get_linear_model(length)
     optimizer.add_objective("linear_min", model2, direction="minimize")
 
-    if True:
+    if False:
         model3 = get_linear_model(length)
         optimizer.add_objective("linear_max", model3, direction="maximize")
 
-    optimizer.run(population_size=pop_size, n_gen=300)
+    optimizer.run(population_size=pop_size, n_gen=200)
 
     print("Result")
     Y = optimizer.pareto_front["Y"]
+    X = optimizer.pareto_front["X"]
     sample_Y = optimizer.pareto_front["sample_Y"]
     print(Y.shape)
     plt.scatter(Y['ones'], Y['linear_min'])
     plt.scatter(sample_Y['ones'], sample_Y['linear_min'])
     plt.show()
 
-    print("Model1 MAX:", length)
-    print("Model2 MIN:", model2.get_min_value())
+    X.to_csv("example/X.csv", index=False)
+    Y.to_csv("example/y.csv", index=False)
+
+    #print("Model1 MAX:", length)
+    #print("Model2 MIN:", model2.get_min_value())
     #print("Model3 MAX:", model3.get_max_value())
