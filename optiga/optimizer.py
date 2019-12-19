@@ -1,4 +1,5 @@
 from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
+import uuid
 import copy
 from collections import defaultdict
 
@@ -53,11 +54,80 @@ class Optimizer:
         else:
             self.config.objectives[objname] = direction
 
-    def add_single_constraint(self, constraint_type, group_name, fnames):
-        raise NotImplementedError()
+    def add_discrete_constraint(self, fname, constraints):
+        """Add discrete_constraint
 
-    def add_group_constraint(self, constraint_type, group_name, fnames):
-        raise NotImplementedError()
+        Parameters
+        ----------
+        fname: str
+            feature_name
+
+        constraints : List[numeric]
+            List of discrete values
+
+        Raises
+        ------
+        Exception
+            if fname no exists in self.config.feature_names
+        """
+        if fname not in self.config.feature_names:
+            raise Exception(f"{fname} not in {self.config.feature_names}")
+
+        if self.config.discrete_constraints is None:
+            self.config.discrete_constraints = {fname: constraints}
+        else:
+            self.config.discrete_constraints[fname] = constraints
+
+    def add_onehot_group_constraint(self, group):
+        """Add onehot group constraints
+
+        Parameters
+        ----------
+        group: List[fname]
+            List of feature names
+
+        Raises
+        ------
+        Exception
+            [description]
+        """
+        for fname in group:
+            if fname not in self.config.feature_names:
+                raise Exception(f"{fname} not in {self.config.feature_names}")
+
+        if self.config.onehot_constraints is None:
+            self.config.onehot_constraints = [group]
+        else:
+            self.config.onehot_constraints += [group]
+
+    def add_sumN_group_constraint(self, group, lower, upper):
+        """Add sum equal constraints
+        if lower_lim == upper_lim, sum equal constraints
+
+        Parameters
+        ----------
+        group : List[fname]
+            List of feature_names
+        lower : float
+            lower lim
+        upper : float
+            upper lim
+
+        """
+        for fname in group:
+            if fname not in self.config.feature_names:
+                raise Exception(f"{fname} not in {self.config.feature_names}")
+
+        if lower > upper:
+            lower, upper = upper, lower
+
+        uid = str(uuid.uuid4())
+        if self.config.sumN_constraints is None:
+            self.config.sumN_groups = {uid: group}
+            self.config.sumN_constraints = {uid: [lower, upper]}
+        else:
+            self.config.sumN_groups.update({uid: group})
+            self.config.sumN_constraints.update({uid: [lower, upper]})
 
     def run(self, population_size, n_gen, logfile=False):
         """run evolutional optimization

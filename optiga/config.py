@@ -27,10 +27,16 @@ class OptConfig:
     limits: Dict[str, List[float]] = None
 
     #: single constraints
-    single_constraints: Dict[str, List[int]] = None
+    discrete_constraints: Dict[str, List[float]] = None
 
     #: onehot, sumequal
-    group_constraints: Dict[str, List[int]] = None
+    onehot_constraints: List[List[str]] = None
+
+    #: sum equal, less, more group constraints
+    sumN_groups: Dict[str, List[str]] = None
+
+    sumN_constraints: Dict[str, List[float]] = None
+
 
     @property
     def weights(self):

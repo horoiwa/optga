@@ -54,7 +54,7 @@ def get_fronts(dominate_table, k):
         rank = dominate_table.sum(1)
 
         #: すでに選ばれているインデックスは除外する
-        current_front = list(np.setdiff1d(np.where(rank == 0)[0], 
+        current_front = list(np.setdiff1d(np.where(rank == 0)[0],
                              selected_indices))
         fronts.append(current_front)
         selected_indices += current_front
