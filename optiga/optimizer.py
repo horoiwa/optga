@@ -5,7 +5,6 @@ from collections import defaultdict
 
 import numpy as np
 import pandas as pd
-from deap import creator
 
 from optiga.config import OptConfig
 from optiga.evaluater import Evaluator

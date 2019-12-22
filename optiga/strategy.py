@@ -14,6 +14,8 @@ class EvolutionStrategy:
 
         self.selecter = globals()[self.config.select]
 
+        self.constraint = Constraints(self.config)
+
     def mate(self, population):
 
         offspring = self.mater.mate(population)
@@ -31,3 +33,12 @@ class EvolutionStrategy:
         selected_population = self.selecter(population, fitness, size)
 
         return selected_population
+
+    def check_constraint(self, population):
+        return population
+
+
+class Constraints:
+
+    def __init__(self, config):
+        pass

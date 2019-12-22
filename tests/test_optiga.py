@@ -52,7 +52,7 @@ def main():
     optimizer.add_sumN_group_constraint(group=["8", "9", "10"], lower=0, upper=2)
     optimizer.add_sumN_group_constraint(group=["11", "12"], lower=0, upper=5)
 
-    optimizer.run(population_size=pop_size, n_gen=20)
+    optimizer.run(population_size=pop_size, n_gen=1)
 
     Y = optimizer.pareto_front["Y"]
     X = optimizer.pareto_front["X"]
