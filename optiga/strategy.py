@@ -1,6 +1,7 @@
 from optiga.tools.mate import MateCxTwoPoints
 from optiga.tools.mutate import MutateUniform
 from optiga.tools.select import SelectNSGA2
+from optiga.tools.constraint import Constrainter
 
 
 class EvolutionStrategy:
@@ -14,7 +15,7 @@ class EvolutionStrategy:
 
         self.selecter = globals()[self.config.select]
 
-        self.constraint = Constraints(self.config)
+        self.constrainter = Constrainter(self.config)
 
     def mate(self, population):
 
@@ -34,11 +35,6 @@ class EvolutionStrategy:
 
         return selected_population
 
-    def check_constraint(self, population):
+    def constraint(self, population):
+        population = self.constrainter.constraint(population)
         return population
-
-
-class Constraints:
-
-    def __init__(self, config):
-        pass

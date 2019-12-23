@@ -13,6 +13,17 @@ from optiga.strategy import EvolutionStrategy
 from optiga.tools.nsga2 import get_paretofront
 
 
+def get_logger():
+    logger = getLogger("RUN_GA")
+    logger.setLevel(DEBUG)
+    stream_handler = StreamHandler()
+    handler_format = Formatter(
+        '(%(levelname)s)[%(asctime)s]\n%(message)s')
+    stream_handler.setFormatter(handler_format)
+    logger.addHandler(stream_handler)
+    return logger
+
+
 class Optimizer:
 
     def __init__(self, samples):
@@ -128,6 +139,17 @@ class Optimizer:
             self.config.sumN_groups.update({uid: group})
             self.config.sumN_constraints.update({uid: [lower, upper]})
 
+    def spawn_population(self, n):
+        raise NotImplementedError()
+
+    def compile(self):
+
+        self.spawner = Spawner(self.config)
+
+        self.strategy = EvolutionStrategy(self.config)
+
+        self.evaluator = Evaluator(self.config, self.models)
+
     def run(self, population_size, n_gen, logfile=False):
         """run evolutional optimization
         Todo: 最初と最後だけIndividualになる方式で
@@ -139,19 +161,14 @@ class Optimizer:
         n_gen : int
             number of generation
         """
-        logger = getLogger("RUN_GA")
-        logger.setLevel(DEBUG)
-        stream_handler = StreamHandler()
-        handler_format = Formatter(
-            '(%(levelname)s)[%(asctime)s]\n%(message)s')
-        stream_handler.setFormatter(handler_format)
-        logger.addHandler(stream_handler)
+        logger = get_logger()
 
         logger.info(f"Start GA optimization: {n_gen} gens")
         logger.info(f"Settings:\n{self.show_config(stdout=False)}")
 
-        self._init_envs()
+        self.compile()
         self._validate()
+
         history = defaultdict(lambda: {"Average": [],
                                        "MAX": [],
                                        "MIN": []})
@@ -160,6 +177,7 @@ class Optimizer:
         for n in range(n_gen):
             population, stats = self.run_generation(population,
                                                     population_size)
+
             for obj_name in self.config.objective_names:
                 history[obj_name]["Average"].append(
                     stats.loc[obj_name, "Average"])
@@ -177,7 +195,6 @@ class Optimizer:
             logger.info(f"====GA RESULT: {obj_name} ====")
             df = self._get_history(history, obj_name)
             self.history[obj_name] = df
-            logger.info(df)
 
         self._post_run(population)
 
@@ -187,7 +204,7 @@ class Optimizer:
 
         children = self.strategy.mate(population)
         children = self.strategy.mutate(children)
-        #children = self.strategy.check_constraint(children)
+        #children = self.strategy.constraint(children)
 
         offspring = pd.DataFrame(np.vstack([ancestor, children]),
                                  columns=self.config.feature_names)
@@ -257,14 +274,6 @@ class Optimizer:
         self.pareto_front["sample_Y"] = pd.DataFrame(
             self.evaluator.evaluate(self.samples),
             columns=self.config.objective_names)
-
-    def _init_envs(self):
-
-        self.spawner = Spawner(self.config)
-
-        self.strategy = EvolutionStrategy(self.config)
-
-        self.evaluator = Evaluator(self.config, self.models)
 
     def _validate(self):
         if not self.config.objectives:

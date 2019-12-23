@@ -1,6 +1,7 @@
 import random
 
 import numpy as np
+import pandas as pd
 
 from optiga.optimizer import Optimizer
 from optiga.support import (get_linear_model, get_onemax_model,
@@ -26,14 +27,29 @@ class TestSpawner:
         optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
         optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
 
-        optimizer.add_onehot_groupconstraint(group=["4", "5"])
+        optimizer.add_onehot_groupconstraint(group=["4", "5", "6"])
 
-        optimizer.add_sumequal_groupconstraint(group=["6", "7", "8"],
+        optimizer.add_sumequal_groupconstraint(group=["7", "8", "9"],
                                                lower=0, upper=2)
 
+        optimizer.compile()
         self.optimizer = optimizer
+        population = self.optimizer.spawner.spawn(30)
+        population = self.optimizer.strategy.constraint(population.values)
+        self.population = pd.DataFrame(
+            population, columns=self.optimizer.config.feature_names)
 
     def teardown_method(self):
-        pass
+        del self.optimizer
 
-    def test_spawn(self):
+    def test_discrete_constraint(self):
+        population = self.population
+        for idx in range(population.shape[0]):
+            assert population.loc[idx, "2"] in [0, 1, 2]
+            assert population.loc[idx, "3"] in [0, 1, 2]
+
+    def test_onehot_constraint(self):
+        population = self.population
+        for idx in range(population.shape[0]):
+            row = population.loc[idx, ["4", "5", "6"]]
+            assert (row != 0).sum() == 1

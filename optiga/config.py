@@ -37,7 +37,6 @@ class OptConfig:
 
     sumN_constraints: Dict[str, List[float]] = None
 
-
     @property
     def weights(self):
         weights = [1.0 if val == "maximize" else -1.0 if "minimize" else None
@@ -72,3 +71,17 @@ class OptConfig:
     @property
     def group_variable_indices(self):
         pass
+
+    @property
+    def indices_to_fnames(self):
+        return {i: fname for i, fname in enumerate(self.feature_names)}
+
+    @property
+    def fnames_to_indices(self):
+        return {fname: i for i, fname in enumerate(self.feature_names)}
+
+    def fname_to_idx(self, fname):
+        return self.fnames_to_indices[fname]
+
+    def idx_to_fname(self, idx):
+        return self.indices_to_fnames[idx]

@@ -46,18 +46,20 @@ def main():
     optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
     optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
 
-    optimizer.add_onehot_group_constraint(group=["4", "5"])
-    optimizer.add_onehot_group_constraint(group=["6", "7"])
+    optimizer.add_onehot_groupconstraint(group=["4", "5"])
+    optimizer.add_onehot_groupconstraint(group=["6", "7"])
 
-    optimizer.add_sumN_group_constraint(group=["8", "9", "10"], lower=0, upper=2)
-    optimizer.add_sumN_group_constraint(group=["11", "12"], lower=0, upper=5)
+    optimizer.add_sumequal_groupconstraint(group=["8", "9", "10"],
+                                           lower=0, upper=2)
+    optimizer.add_sumequal_groupconstraint(group=["11", "12"],
+                                           lower=0, upper=5)
 
-    optimizer.run(population_size=pop_size, n_gen=1)
+    optimizer.run(population_size=pop_size, n_gen=100)
 
     Y = optimizer.pareto_front["Y"]
     X = optimizer.pareto_front["X"]
 
-    if False:
+    if True:
         print("Result")
         sample_Y = optimizer.pareto_front["sample_Y"]
         print(Y.shape)
