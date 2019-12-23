@@ -77,7 +77,7 @@ class Optimizer:
         else:
             self.config.discrete_constraints[fname] = constraints
 
-    def add_onehot_group_constraint(self, group):
+    def add_onehot_groupconstraint(self, group):
         """Add onehot group constraints
 
         Parameters
@@ -99,7 +99,7 @@ class Optimizer:
         else:
             self.config.onehot_constraints += [group]
 
-    def add_sumN_group_constraint(self, group, lower, upper):
+    def add_sumequal_groupconstraint(self, group, lower, upper):
         """Add sum equal constraints
         if lower_lim == upper_lim, sum equal constraints
 
@@ -187,6 +187,7 @@ class Optimizer:
 
         children = self.strategy.mate(population)
         children = self.strategy.mutate(children)
+        #children = self.strategy.check_constraint(children)
 
         offspring = pd.DataFrame(np.vstack([ancestor, children]),
                                  columns=self.config.feature_names)
@@ -253,8 +254,10 @@ class Optimizer:
         self.pareto_front["Y"] = pareto_fitness
 
         self.pareto_front["sample_X"] = self.samples
-        self.pareto_front["sample_Y"] = pd.DataFrame(self.evaluator.evaluate(self.samples),
-                                                     columns=self.config.objective_names)
+        self.pareto_front["sample_Y"] = pd.DataFrame(
+            self.evaluator.evaluate(self.samples),
+            columns=self.config.objective_names)
+
     def _init_envs(self):
 
         self.spawner = Spawner(self.config)

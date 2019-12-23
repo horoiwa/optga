@@ -37,4 +37,3 @@ class TestSpawner:
         pass
 
     def test_spawn(self):
-        pass

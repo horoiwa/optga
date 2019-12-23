@@ -61,15 +61,14 @@ class OptConfig:
         return [key for key in self.limits.keys()]
 
     @property
-    def fname_to_index(self):
-        return {key: n for n, key in enumerate(self.limits.keys())}
+    def group_variables(self):
+        groups = []
+        for group in self.onehot_constraints:
+            groups.append(group)
+        for group in self.sumN_groups.values():
+            groups.append(group)
+        return groups
 
     @property
-    def index_to_fname(self):
-        return {n: key for n, key in enumerate(self.limits.keys())}
-
-    def convert_fnames_to_indices(self, fnames):
-        return [self.fname_to_index[fname] for fname in fnames]
-
-    def convert_indices_to_fnames(self, indices):
-        return [self.index_to_fname[idx] for idx in indices]
+    def group_variable_indices(self):
+        pass
