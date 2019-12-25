@@ -46,6 +46,9 @@ def main():
     optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
     optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
 
+    optimizer.add_valuerange_constraint(fname="2", lower=0, upper=2)
+    optimizer.add_valuerange_constraint(fname="3", lower=0, upper=2)
+
     optimizer.add_onehot_groupconstraint(group=["4", "5"])
     optimizer.add_onehot_groupconstraint(group=["6", "7"])
 
@@ -54,7 +57,14 @@ def main():
     optimizer.add_sumequal_groupconstraint(group=["11", "12"],
                                            lower=0, upper=5)
 
-    optimizer.run(population_size=pop_size, n_gen=100)
+    def test_func(X):
+        print("test func is called!!")
+        print(X.columns)
+        return X
+
+    #optimizer.add_user_constraint(test_func)
+
+    optimizer.run(population_size=pop_size, n_gen=1)
 
     Y = optimizer.pareto_front["Y"]
     X = optimizer.pareto_front["X"]
@@ -70,7 +80,7 @@ def main():
         X.to_csv("example/X.csv", index=False)
         Y.to_csv("example/y.csv", index=False)
 
-    print(X)
+    print(X.iloc[:, :8])
     #print("Model1 MAX:", length)
     #print("Model2 MIN:", model2.get_min_value())
     #print("Model3 MAX:", model3.get_max_value())

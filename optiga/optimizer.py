@@ -39,6 +39,8 @@ class Optimizer:
 
         self.group_constraints = {}
 
+        self.user_constraint_func = None
+
         self.config.limits = self._get_limits(self.samples)
 
         self.models = {}
@@ -64,6 +66,12 @@ class Optimizer:
         else:
             self.config.objectives[objname] = direction
 
+    def add_valuerange_constraint(self, fname, lower, upper):
+        try:
+            self.config.limits[fname] = [lower, upper]
+        except KeyError:
+            print(f"{fname} not found from {list(self.config.limits.keys())}")
+
     def add_discrete_constraint(self, fname, constraints):
         """Add discrete_constraint
 
@@ -88,27 +96,21 @@ class Optimizer:
         else:
             self.config.discrete_constraints[fname] = constraints
 
-    def add_onehot_groupconstraint(self, group):
-        """Add onehot group constraints
-
-        Parameters
-        ----------
-        group: List[fname]
-            List of feature names
-
-        Raises
-        ------
-        Exception
-            [description]
-        """
+    def add_onehot_groupconstraint(self, group, lower=1.0, upper=1.0):
         for fname in group:
             if fname not in self.config.feature_names:
                 raise Exception(f"{fname} not in {self.config.feature_names}")
 
+        if lower > upper:
+            lower, upper = upper, lower
+
+        uid = str(uuid.uuid4())
         if self.config.onehot_constraints is None:
-            self.config.onehot_constraints = [group]
+            self.config.onehot_groups = {uid: group}
+            self.config.onehot_constraints = {uid: [lower, upper]}
         else:
-            self.config.onehot_constraints += [group]
+            self.config.onehot_groups.update({uid: group})
+            self.config.onehot_constraints.update({uid: [lower, upper]})
 
     def add_sumequal_groupconstraint(self, group, lower, upper):
         """Add sum equal constraints
@@ -139,8 +141,14 @@ class Optimizer:
             self.config.sumN_groups.update({uid: group})
             self.config.sumN_constraints.update({uid: [lower, upper]})
 
+    def add_user_constraint(self, func):
+        self.user_constraint_func = func
+
     def spawn_population(self, n):
-        raise NotImplementedError()
+        self.compile()
+        return pd.DataFrame(
+            self.strategy.constraint(self.spawner.spawn(n).values),
+            columns=self.config.feature_names)
 
     def compile(self):
 
@@ -150,7 +158,11 @@ class Optimizer:
 
         self.evaluator = Evaluator(self.config, self.models)
 
-    def run(self, population_size, n_gen, logfile=False):
+        if self.user_constraint_func is not None:
+            self.strategy.constrainter.user_constraint_func = (
+                self.user_constraint_func)
+
+    def run(self, n_gen, population_size=500, logfile=False):
         """run evolutional optimization
         Todo: 最初と最後だけIndividualになる方式で
 
@@ -162,18 +174,14 @@ class Optimizer:
             number of generation
         """
         logger = get_logger()
-
-        logger.info(f"Start GA optimization: {n_gen} gens")
         logger.info(f"Settings:\n{self.show_config(stdout=False)}")
-
-        self.compile()
-        self._validate()
 
         history = defaultdict(lambda: {"Average": [],
                                        "MAX": [],
                                        "MIN": []})
 
-        population = self.spawner.spawn(population_size).values
+        population = self.spawn_population(population_size).values
+        self._validate()
         for n in range(n_gen):
             population, stats = self.run_generation(population,
                                                     population_size)
@@ -204,7 +212,7 @@ class Optimizer:
 
         children = self.strategy.mate(population)
         children = self.strategy.mutate(children)
-        #children = self.strategy.constraint(children)
+        children = self.strategy.constraint(children)
 
         offspring = pd.DataFrame(np.vstack([ancestor, children]),
                                  columns=self.config.feature_names)

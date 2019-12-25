@@ -29,8 +29,10 @@ class OptConfig:
     #: single constraints
     discrete_constraints: Dict[str, List[float]] = None
 
-    #: onehot, sumequal
-    onehot_constraints: List[List[str]] = None
+    #: onehot
+    onehot_groups: Dict[str, List[str]] = None
+
+    onehot_constraints: Dict[str, List[float]] = None
 
     #: sum equal, less, more group constraints
     sumN_groups: Dict[str, List[str]] = None
