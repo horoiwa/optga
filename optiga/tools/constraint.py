@@ -65,8 +65,10 @@ def _discrete(arr, constraints):
 @jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
 def _onehot(arr, valuerange):
     #: if valuerange is [1, 1], equals to np.ones(arr.shape[0])
-    constants = np.random.uniform(valuerange[0],
-                                  valuerange[1],
+    lowerlim = valuerange[0]
+    upperlim = valuerange[1]
+    constants = np.random.uniform(lowerlim,
+                                  upperlim, 
                                   arr.shape[0])
     #: fill all zero rows (invalid rows) by constant
     arr[arr.sum(1) == 0] = 1
@@ -77,6 +79,10 @@ def _onehot(arr, valuerange):
     columns = np.arange(arr.shape[1])
     for i in range(arr.shape[0]):
         selected_col = np.random.choice(columns[nonzero_elements[i]])
-        onehot_arr[i, selected_col] = constants[i]
+        selected_val = arr[i, selected_col]
+        if selected_val <= upperlim and selected_val >= lowerlim:
+            onehot_arr[i, selected_col] = selected_val
+        else:
+            onehot_arr[i, selected_col] = constants[i]
 
     return onehot_arr
