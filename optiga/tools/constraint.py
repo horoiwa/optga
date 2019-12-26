@@ -15,6 +15,10 @@ class Constrainter:
 
         self.onehot_constraints = self.config.onehot_constraints
 
+        self.sumequal_groups = self.config.sumequal_groups
+
+        self.sumequal_constraints = self.config.sumequal_constraints
+
         self.user_constraint_func = None
 
     def constraint(self, population):
@@ -24,6 +28,7 @@ class Constrainter:
             population = population.astype(np.float64)
 
         population = self.add_onehot_constraint(population)
+        population = self.add_sumequal_constraint(population)
         population = self.add_discrete_constraint(population)
 
         if self.user_constraint_func is not None:
@@ -52,6 +57,15 @@ class Constrainter:
 
         return population
 
+    def add_sumequal_constraint(self, population):
+        for uid, group in self.sumequal_groups.items():
+            columns = [self.config.fname_to_idx(fname) for fname in group]
+            constraints = np.array(
+                self.sumequal_constraints[uid]).astype(np.float64)
+            population[:, columns] = _sumequal(population[:, columns],
+                                               constraints)
+        return population
+
 
 @jit(f8[:](f8[:], f8[:]), nopython=True)
 def _discrete(arr, constraints):
@@ -68,7 +82,7 @@ def _onehot(arr, valuerange):
     lowerlim = valuerange[0]
     upperlim = valuerange[1]
     constants = np.random.uniform(lowerlim,
-                                  upperlim, 
+                                  upperlim,
                                   arr.shape[0])
     #: fill all zero rows (invalid rows) by constant
     arr[arr.sum(1) == 0] = 1
@@ -86,3 +100,8 @@ def _onehot(arr, valuerange):
             onehot_arr[i, selected_col] = constants[i]
 
     return onehot_arr
+
+
+@jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
+def _sumequal(arr, valuerange):
+    return arr

@@ -35,9 +35,9 @@ class OptConfig:
     onehot_constraints: Dict[str, List[float]] = None
 
     #: sum equal, less, more group constraints
-    sumN_groups: Dict[str, List[str]] = None
+    sumequal_groups: Dict[str, List[str]] = None
 
-    sumN_constraints: Dict[str, List[float]] = None
+    sumequal_constraints: Dict[str, List[float]] = None
 
     @property
     def weights(self):
@@ -66,7 +66,7 @@ class OptConfig:
         groups = []
         for group in self.onehot_constraints:
             groups.append(group)
-        for group in self.sumN_groups.values():
+        for group in self.sumequal_groups.values():
             groups.append(group)
         return groups
 
