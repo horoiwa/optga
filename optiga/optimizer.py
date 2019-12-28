@@ -29,7 +29,7 @@ class Optimizer:
     def __init__(self, samples):
 
         if not isinstance(samples, pd.DataFrame):
-            raise Exception("Sample data must be DataFrame")
+            raise Exception("Sample data must be pd.DataFrame")
 
         self.samples = samples
 
