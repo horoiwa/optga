@@ -1,6 +1,7 @@
 import random
 
 import numpy as np
+import pytest
 
 from optiga.optimizer import Optimizer
 from optiga.support import (get_linear_model, get_onemax_model,
@@ -29,12 +30,18 @@ class TestSpawner:
         optimizer.add_onehot_groupconstraint(group=["4", "5"])
 
         optimizer.add_sumtotal_groupconstraint(group=["6", "7", "8"],
-                                               lower=0, upper=2)
+                                               lower=5, upper=5)
 
         self.optimizer = optimizer
 
     def teardown_method(self):
-        pass
+        del self.optimizer
 
     def test_spawn(self):
-        pass
+        population = self.optimizer.spawn_population(100)
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row["2"] in [0, 1, 2]
+            assert row["3"] in [0, 1, 2]
+            assert row[["4", "5"]].sum() == pytest.approx(1.0, 0.01)
+            assert row[["6", "7", "8"]].sum() == pytest.approx(5.0, 0.01)
