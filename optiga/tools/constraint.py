@@ -15,6 +15,10 @@ class Constrainter:
 
         self.onehot_constraints = self.config.onehot_constraints
 
+        self.sumequal_groups = self.config.sumequal_groups
+
+        self.sumequal_constraints = self.config.sumequal_constraints
+
         self.user_constraint_func = None
 
     def constraint(self, population):
@@ -54,6 +58,15 @@ class Constrainter:
         return population
 
     def add_sumequal_constraint(self, population):
+<<<<<<< HEAD
+=======
+        for uid, group in self.sumequal_groups.items():
+            columns = [self.config.fname_to_idx(fname) for fname in group]
+            constraints = np.array(
+                self.sumequal_constraints[uid]).astype(np.float64)
+            population[:, columns] = _sumequal(population[:, columns],
+                                               constraints)
+>>>>>>> fee6c4c2e0b13c9dc87f9066aad82c1116170277
         return population
 
 
@@ -69,8 +82,10 @@ def _discrete(arr, constraints):
 @jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
 def _onehot(arr, valuerange):
     #: if valuerange is [1, 1], equals to np.ones(arr.shape[0])
-    constants = np.random.uniform(valuerange[0],
-                                  valuerange[1],
+    lowerlim = valuerange[0]
+    upperlim = valuerange[1]
+    constants = np.random.uniform(lowerlim,
+                                  upperlim,
                                   arr.shape[0])
     #: fill all zero rows (invalid rows) by constant
     arr[arr.sum(1) == 0] = 1
@@ -81,6 +96,15 @@ def _onehot(arr, valuerange):
     columns = np.arange(arr.shape[1])
     for i in range(arr.shape[0]):
         selected_col = np.random.choice(columns[nonzero_elements[i]])
-        onehot_arr[i, selected_col] = constants[i]
+        selected_val = arr[i, selected_col]
+        if selected_val <= upperlim and selected_val >= lowerlim:
+            onehot_arr[i, selected_col] = selected_val
+        else:
+            onehot_arr[i, selected_col] = constants[i]
 
     return onehot_arr
+
+
+@jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
+def _sumequal(arr, valuerange):
+    return arr

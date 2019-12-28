@@ -69,7 +69,7 @@ def main():
     Y = optimizer.pareto_front["Y"]
     X = optimizer.pareto_front["X"]
 
-    if True:
+    if False:
         print("Result")
         sample_Y = optimizer.pareto_front["sample_Y"]
         print(Y.shape)
@@ -80,7 +80,7 @@ def main():
         X.to_csv("example/X.csv", index=False)
         Y.to_csv("example/y.csv", index=False)
 
-    print(X.iloc[:, :8])
+    print(X.iloc[:, 5:10])
     #print("Model1 MAX:", length)
     #print("Model2 MIN:", model2.get_min_value())
     #print("Model3 MAX:", model3.get_max_value())
