@@ -4,9 +4,9 @@ import pickle
 import matplotlib.pyplot as plt
 import pytest
 
-from optiga import __version__
-from optiga.optimizer import Optimizer
-from optiga.support import (get_linear_model, get_onemax_model,
+from optga import __version__
+from optga.optimizer import Optimizer
+from optga.support import (get_linear_model, get_onemax_model,
                             get_onemax_samples)
 
 
@@ -14,7 +14,7 @@ def test_version():
     assert __version__ == '0.1.0'
 
 
-class TestOptiga:
+class Testoptga:
 
     def setup_method(self):
 

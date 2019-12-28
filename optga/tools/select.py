@@ -1,4 +1,4 @@
-from optiga.tools.nsga2 import NSGA2
+from optga.tools.nsga2 import NSGA2
 
 
 def SelectNSGA2(population, fitness, size):

@@ -6,11 +6,11 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
-from optiga.config import OptConfig
-from optiga.evaluater import Evaluator
-from optiga.spawner import Spawner
-from optiga.strategy import EvolutionStrategy
-from optiga.tools.nsga2 import get_paretofront
+from optga.config import OptConfig
+from optga.evaluater import Evaluator
+from optga.spawner import Spawner
+from optga.strategy import EvolutionStrategy
+from optga.tools.nsga2 import get_paretofront
 
 
 def get_logger():

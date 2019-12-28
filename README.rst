@@ -1,10 +1,10 @@
 ======
-Optiga
+Optga
 ======
-.. image:: https://travis-ci.org/horoiwa/optiga.svg?branch=master
-    :target: https://travis-ci.org/horoiwa/optiga
+.. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
+    :target: https://travis-ci.org/horoiwa/optga
 
-Optiga is a multi-objective optimization framework for machine learning models.
+optga is a multi-objective optimization framework for machine learning models.
 
     *This dataset has three obejctive variables; Y1, Y2, and Y3.
     Fortunately, they are well predicted by machine learing model.*
@@ -16,9 +16,9 @@ Optiga is a multi-objective optimization framework for machine learning models.
 OverView
 ========
 
-Optiga explores experimental condition to optimize multiple objective variables in trade-off relationship, using genetic algorithm.
+optga explores experimental condition to optimize multiple objective variables in trade-off relationship, using genetic algorithm.
 
-Optiga enables
+optga enables
 
 * Rapid optimization
 * Easy user interface
@@ -30,7 +30,7 @@ Install
 
 .. code-block:: bash
 
-    pip install optiga
+    pip install optga
 
 
 Getting started
