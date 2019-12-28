@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "optiga"
+name = "optga"
 version = "0.1.0"
 description = "Library for inverse design from machine learing model using genetic algorithm"
 authors = ["horoiwa <horoiwa195@gmail.com>"]
@@ -18,7 +18,7 @@ matplotlib = "^3.1.2"
 pytest = "^3.0"
 
 [tool.poetry.scripts]
-main = "tests.test_optiga:main"
+main = "tests.test_optga:main"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

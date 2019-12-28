@@ -3,8 +3,8 @@ import random
 import numpy as np
 import pytest
 
-from optiga.optimizer import Optimizer
-from optiga.support import (get_linear_model, get_onemax_model,
+from optga.optimizer import Optimizer
+from optga.support import (get_linear_model, get_onemax_model,
                             get_onemax_samples)
 
 
