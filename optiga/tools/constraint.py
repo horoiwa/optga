@@ -58,15 +58,12 @@ class Constrainter:
         return population
 
     def add_sumequal_constraint(self, population):
-<<<<<<< HEAD
-=======
         for uid, group in self.sumequal_groups.items():
             columns = [self.config.fname_to_idx(fname) for fname in group]
             constraints = np.array(
                 self.sumequal_constraints[uid]).astype(np.float64)
             population[:, columns] = _sumequal(population[:, columns],
                                                constraints)
->>>>>>> fee6c4c2e0b13c9dc87f9066aad82c1116170277
         return population
 
 
