@@ -112,7 +112,7 @@ class Optimizer:
             self.config.onehot_groups.update({uid: group})
             self.config.onehot_constraints.update({uid: [lower, upper]})
 
-    def add_sumequal_groupconstraint(self, group, lower, upper):
+    def add_sumtotal_groupconstraint(self, group, lower, upper):
         """Add sum equal constraints
         if lower_lim == upper_lim, sum equal constraints
 
@@ -134,12 +134,12 @@ class Optimizer:
             lower, upper = upper, lower
 
         uid = str(uuid.uuid4())
-        if self.config.sumequal_constraints is None:
-            self.config.sumequal_groups = {uid: group}
-            self.config.sumequal_constraints = {uid: [lower, upper]}
+        if self.config.sumtotal_constraints is None:
+            self.config.sumtotal_groups = {uid: group}
+            self.config.sumtotal_constraints = {uid: [lower, upper]}
         else:
-            self.config.sumequal_groups.update({uid: group})
-            self.config.sumequal_constraints.update({uid: [lower, upper]})
+            self.config.sumtotal_groups.update({uid: group})
+            self.config.sumtotal_constraints.update({uid: [lower, upper]})
 
     def add_user_constraint(self, func):
         self.user_constraint_func = func

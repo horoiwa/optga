@@ -1,4 +1,5 @@
 import random
+import pytest
 
 import numpy as np
 import pandas as pd
@@ -29,7 +30,7 @@ class TestSpawner:
 
         optimizer.add_onehot_groupconstraint(group=["4", "5", "6"])
 
-        optimizer.add_sumequal_groupconstraint(group=["7", "8", "9"],
+        optimizer.add_sumtotal_groupconstraint(group=["7", "8", "9"],
                                                lower=2, upper=2)
 
         optimizer.compile()
@@ -54,8 +55,9 @@ class TestSpawner:
             row = population.loc[idx, ["4", "5", "6"]]
             assert (row != 0).sum() == 1
 
-    def test_sumequal_constraint(self):
+    def test_sumtotal_constraint(self):
         population = self.population
         for idx in range(population.shape[0]):
             row = population.loc[idx, ["7", "8", "9"]]
-            assert (row != 0).sum() == 2
+            print(row.sum())
+            assert row.sum() == pytest.approx(2.0, 0.1)

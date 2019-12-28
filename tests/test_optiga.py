@@ -52,9 +52,9 @@ def main():
     optimizer.add_onehot_groupconstraint(group=["4", "5"])
     optimizer.add_onehot_groupconstraint(group=["6", "7"])
 
-    optimizer.add_sumequal_groupconstraint(group=["8", "9", "10"],
+    optimizer.add_sumtotal_groupconstraint(group=["8", "9", "10"],
                                            lower=0, upper=2)
-    optimizer.add_sumequal_groupconstraint(group=["11", "12"],
+    optimizer.add_sumtotal_groupconstraint(group=["11", "12"],
                                            lower=0, upper=5)
 
     def test_func(X):

@@ -28,7 +28,7 @@ class TestSpawner:
 
         optimizer.add_onehot_groupconstraint(group=["4", "5"])
 
-        optimizer.add_sumequal_groupconstraint(group=["6", "7", "8"],
+        optimizer.add_sumtotal_groupconstraint(group=["6", "7", "8"],
                                                lower=0, upper=2)
 
         self.optimizer = optimizer
