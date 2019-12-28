@@ -1,4 +1,5 @@
-Optiga: Inverse design strategy from machine learning model
+============================================================
+Optiga: Inverse design strategy using machine learning model
 ============================================================
 
 
