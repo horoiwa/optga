@@ -25,7 +25,11 @@ by limitating the target to machine learning models,
 
 Install
 =======
-`pip install optiga`
+
+.. code-block:: bash
+
+    pip install optiga
+
 
 Getting started
 ===============
