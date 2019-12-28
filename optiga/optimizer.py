@@ -150,6 +150,15 @@ class Optimizer:
             self.strategy.constraint(self.spawner.spawn(n).values),
             columns=self.config.feature_names)
 
+    def export_config(self, config_path):
+        pass
+
+    def load_config(self, config_path):
+        pass
+
+    def export_result(self, export_path):
+        pass
+
     def compile(self):
 
         self.spawner = Spawner(self.config)
