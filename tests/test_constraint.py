@@ -30,7 +30,7 @@ class TestSpawner:
         optimizer.add_onehot_groupconstraint(group=["4", "5", "6"])
 
         optimizer.add_sumequal_groupconstraint(group=["7", "8", "9"],
-                                               lower=0, upper=2)
+                                               lower=2, upper=2)
 
         optimizer.compile()
         self.optimizer = optimizer
@@ -53,3 +53,9 @@ class TestSpawner:
         for idx in range(population.shape[0]):
             row = population.loc[idx, ["4", "5", "6"]]
             assert (row != 0).sum() == 1
+
+    def test_sumequal_constraint(self):
+        population = self.population
+        for idx in range(population.shape[0]):
+            row = population.loc[idx, ["7", "8", "9"]]
+            assert (row != 0).sum() == 2

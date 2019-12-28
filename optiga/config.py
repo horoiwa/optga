@@ -75,15 +75,15 @@ class OptConfig:
         pass
 
     @property
-    def indices_to_fnames(self):
+    def indices_fnames_dict(self):
         return {i: fname for i, fname in enumerate(self.feature_names)}
 
     @property
-    def fnames_to_indices(self):
+    def fnames_indices_dict(self):
         return {fname: i for i, fname in enumerate(self.feature_names)}
 
     def fname_to_idx(self, fname):
-        return self.fnames_to_indices[fname]
+        return self.fnames_indices_dict[fname]
 
     def idx_to_fname(self, idx):
-        return self.indices_to_fnames[idx]
+        return self.indices_fnames_dict[idx]

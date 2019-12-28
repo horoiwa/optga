@@ -24,6 +24,7 @@ class Constrainter:
             population = population.astype(np.float64)
 
         population = self.add_onehot_constraint(population)
+        population = self.add_sumequal_constraint(population)
         population = self.add_discrete_constraint(population)
 
         if self.user_constraint_func is not None:
@@ -50,6 +51,9 @@ class Constrainter:
             population[:, columns] = _onehot(population[:, columns],
                                              constraints)
 
+        return population
+
+    def add_sumequal_constraint(self, population):
         return population
 
 

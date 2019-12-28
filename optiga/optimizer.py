@@ -112,9 +112,6 @@ class Optimizer:
             self.config.onehot_groups.update({uid: group})
             self.config.onehot_constraints.update({uid: [lower, upper]})
 
-    def add_nhot_groupconstraint(self, group, n, lower=1.0, upper=1.0):
-        raise NotImplementedError()
-
     def add_sumequal_groupconstraint(self, group, lower, upper):
         """Add sum equal constraints
         if lower_lim == upper_lim, sum equal constraints
