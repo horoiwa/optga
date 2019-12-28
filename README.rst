@@ -1,6 +1,8 @@
 ======
 Optiga
 ======
+.. image:: https://travis-ci.org/horoiwa/optiga.svg?branch=master
+    :target: https://travis-ci.org/horoiwa/optiga
 
 Optiga is a multi-objective optimization framework for machine learning models.
 
