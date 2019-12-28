@@ -1,12 +1,10 @@
-import random
 import pytest
 
-import numpy as np
 import pandas as pd
 
 from optga.optimizer import Optimizer
 from optga.support import (get_linear_model, get_onemax_model,
-                            get_onemax_samples)
+                           get_onemax_samples)
 
 
 class TestSpawner:
