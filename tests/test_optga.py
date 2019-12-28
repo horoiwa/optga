@@ -1,13 +1,9 @@
-from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
-import pickle
-
-import matplotlib.pyplot as plt
 import pytest
 
 from optga import __version__
 from optga.optimizer import Optimizer
 from optga.support import (get_linear_model, get_onemax_model,
-                            get_onemax_samples)
+                           get_onemax_samples)
 
 
 def test_version():
@@ -60,7 +56,6 @@ class Testoptga:
     def test_GA(self):
         self.optimizer.run(population_size=300, n_gen=10)
 
-        Y = self.optimizer.pareto_front["Y"]
         X = self.optimizer.pareto_front["X"]
         for i in range(X.shape[0]):
             row = X.iloc[i, :]
