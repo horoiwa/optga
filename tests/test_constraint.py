@@ -54,17 +54,8 @@ class TestSpawner:
             row = population.loc[idx, ["4", "5", "6"]]
             assert (row != 0).sum() == 1
 
-<<<<<<< HEAD
     def test_sumequal_constraint(self):
         population = self.population
         for idx in range(population.shape[0]):
             row = population.loc[idx, ["7", "8", "9"]]
             assert (row != 0).sum() == 2
-=======
-    def test_sumequal_constrain(self):
-        population = self.population
-        for idx in range(population.shape[0]):
-            row = population.loc[idx, ["7", "8", "9"]]
-            assert (row != 0).sum() <= 1
-            assert (row != 0).sum() >= 0
->>>>>>> fee6c4c2e0b13c9dc87f9066aad82c1116170277
