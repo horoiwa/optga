@@ -1,11 +1,11 @@
-from logging import DEBUG, INFO, Formatter, StreamHandler, getLogger
-import uuid
 import copy
+import shutil
+import uuid
 from collections import defaultdict
+from logging import DEBUG, Formatter, StreamHandler, getLogger
 
 import numpy as np
 import pandas as pd
-
 from optga.config import OptConfig
 from optga.evaluater import Evaluator
 from optga.spawner import Spawner
@@ -151,12 +151,14 @@ class Optimizer:
             columns=self.config.feature_names)
 
     def export_config(self, config_path):
-        pass
+        with open(config_path, "w") as f:
+            f.write(self.config.to_json(indent=2, ensure_ascii=False))
 
-    def load_config(self, config_path):
-        pass
+    def reload_config(self, config_path):
+        with open(config_path, "r") as f:
+            self.config = OptConfig.from_json(f)
 
-    def export_result(self, export_path):
+    def save_result(self):
         pass
 
     def compile(self):
