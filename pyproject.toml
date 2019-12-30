@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "optga"
 version = "0.1.0"
-description = "Library for inverse design from machine learing model using genetic algorithm"
+description = "Framework to find out optimal input of machine learning model"
 authors = ["horoiwa <horoiwa195@gmail.com>"]
 
 [tool.poetry.dependencies]

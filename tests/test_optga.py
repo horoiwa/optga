@@ -54,7 +54,7 @@ class Testoptga:
         del self.optimizer
 
     def test_GA(self):
-        self.optimizer.run(population_size=300, n_gen=10)
+        self.optimizer.run(population_size=500, n_gen=100)
 
         X = self.optimizer.pareto_front["X_pareto"]
         for i in range(X.shape[0]):
