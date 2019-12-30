@@ -46,7 +46,7 @@ class TestIO:
 
     def teardown_method(self):
         del self.optimizer
-        #shutil.rmtree(self.export_dir)
+        shutil.rmtree(self.export_dir)
 
     def test_io_config(self):
         self.optimizer.export_config(
