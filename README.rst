@@ -4,6 +4,11 @@ Optga
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
     :target: https://travis-ci.org/horoiwa/optga
 
+.. image:: https://img.shields.io/badge/python-3.7-blue
+
+.. image:: https://img.shields.io/badge/license-MIT-blue
+    :target: https://spdx.org/licenses/MIT
+
 optga is a multi-objective optimization framework for machine learning models.
 
     *This dataset has three obejctive variables; Y1, Y2, and Y3.
