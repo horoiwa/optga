@@ -12,7 +12,7 @@ class BaseMate:
 
         self.birth_rate = self.config.birth_rate
 
-        self.group_indices = self.config.group_variables_indices
+        self.groups = self.config.group_variables_indices
 
     @abstractmethod
     def mate(self, population):
@@ -34,10 +34,13 @@ class MateCxTwoPoints(BaseMate):
                                  np.random.randint(1, population.shape[1]-1,
                                                    population.shape[0]))])
 
-        mask = np.ones(population.shape)
-        for i in range(mask.shape[0]):
-            #: この処理はint32なのでそこそこ高速
-            mask[i, cxpoints[i, 0]:cxpoints[i, 1]] = 0
+        mask = apply_cxpoints(np.ones(population.shape).astype(np.int64),
+                              cxpoints.astype(np.int64))
+
+        #: group variables must be exchanged together
+        for group in self.groups:
+            group = np.array(group).astype(np.int64)
+            mask[:, group] = adjust_group(mask[:, group])
 
         mask = mask.astype(bool)
         population *= mask
@@ -47,9 +50,19 @@ class MateCxTwoPoints(BaseMate):
         return children
 
 
-def get_mate_mask(self, mask, cxpoints):
-    mask[i, cxpoints[i, 0]:cxpoints[i, 1]] = 0
+@jit(i8[:, :](i8[:, :], i8[:, :]), nopython=True)
+def apply_cxpoints(mask, cxpoints):
+    for i in range(mask.shape[0]):
+        mask[i, cxpoints[i, 0]:cxpoints[i, 1]] = 0
     return mask
+
+
+@jit(i8[:, :](i8[:, :]), nopython=True)
+def adjust_group(arr, ):
+    for i in range(arr.shape[0]):
+        arr[i, :] = np.round(np.mean(arr[i, :]))
+    return arr
+
 
 if __name__ == "__main__":
     arr1 = np.arange(1, 13).reshape(3, 4)

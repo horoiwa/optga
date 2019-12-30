@@ -61,7 +61,7 @@ class TestMate:
             row = population.iloc[i, :]
             assert row["1"] in [0, 1, 2]
 
-    def est_mate_group(self):
+    def test_mate_group(self):
         population = pd.DataFrame(self.strategy.mate(self.init_population),
                                   columns=self.optimizer.config.feature_names)
         for i in range(population.shape[0]):
