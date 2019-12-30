@@ -9,7 +9,7 @@ Optga
 .. image:: https://img.shields.io/badge/license-MIT-blue
     :target: https://spdx.org/licenses/MIT
 
-**Finding out optimal input of your machine learning model in order to balance multipule objective variables in a trade-off relationship**
+**Finding out optimal inputs of your machine learning model in order to balance multipule objective variables in trade-off relationship**
 
 Overview
 ========

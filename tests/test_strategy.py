@@ -35,13 +35,15 @@ class TestMate:
 
         self.optimizer = optimizer
         self.strategy = self.optimizer.strategy
-        self.init_population = self.optimizer.spawn_population(100)
+        self.init_population = self.optimizer.spawn_population(100).values
 
     def teardown_method(self):
         del self.optimizer
 
     def test_init_population(self):
-        population = self.init_population
+        population = pd.DataFrame(self.init_population,
+                                  columns=self.optimizer.config.feature_names)
+
         for i in range(population.shape[0]):
             row = population.iloc[i, :]
             assert row["1"] in [0, 1, 2]
@@ -71,3 +73,15 @@ class TestMate:
 
     def test_mutate(self):
         population = self.strategy.mutate(self.init_population)
+        population = self.strategy.constraint(population)
+        population = pd.DataFrame(population,
+                                  columns=self.optimizer.config.feature_names)
+
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row["1"] in [0, 1, 2]
+            assert row[["3", "4", "5"]].sum() == pytest.approx(1.0, 0.01)
+            assert row[["7", "8", "9"]].sum() == pytest.approx(2.0, 0.01)
+
+    def test_select(self):
+        pass

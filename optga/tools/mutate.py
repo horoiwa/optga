@@ -28,10 +28,10 @@ class MutateUniform(BaseMutate):
         mask = [bool(np.random.binomial(1, self.mutpb))
                 for i in range(population.shape[0])]
 
-        population[mask] = self.mutate_float(population[mask])
+        population[mask] = self.mutate_(population[mask])
         return population
 
-    def mutate_float(self, population):
+    def mutate_(self, population):
         mutation = np.zeros(population.shape)
         for i in range(mutation.shape[1]):
             mutation[:, i] = np.random.uniform(self.upperlim[i],

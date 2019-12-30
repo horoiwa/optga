@@ -66,4 +66,3 @@ class Testoptga:
             assert row[["8", "9", "10"]].sum() == pytest.approx(1.0, 0.01)
             assert row[["11", "12"]].sum() <= 1.0 + 0.01
             assert row[["11", "12"]].sum() >= 0.01
-
