@@ -1,4 +1,5 @@
 import copy
+import os
 import shutil
 import uuid
 from collections import defaultdict
@@ -156,10 +157,35 @@ class Optimizer:
 
     def reload_config(self, config_path):
         with open(config_path, "r") as f:
-            self.config = OptConfig.from_json(f)
+            config_json = f.read()
+        self.config = OptConfig.from_json(config_json)
 
-    def save_result(self):
-        pass
+    def show_config(self):
+        config = self.config.to_json(indent=2, ensure_ascii=False)
+        print(config)
+
+    def export_result(self, export_dir):
+        if os.path.exists(export_dir):
+            print(f"Overwrite: {export_dir}")
+            shutil.rmtree(export_dir)
+        os.makedirs(export_dir)
+
+        self.export_config(os.path.join(export_dir, "opt_config.json"))
+
+        if "X_pareto" in self.pareto_front.keys():
+            self.pareto_front["X_pareto"].to_csv(
+                os.path.join(export_dir, "X_pareto.csv"), index=False)
+            self.pareto_front["Y_pareto"].to_csv(
+                os.path.join(export_dir, "Y_pareto.csv"), index=False)
+
+            self.pareto_front["X_init"].to_csv(
+                os.path.join(export_dir, "X_init.csv"), index=False)
+            self.pareto_front["Y_init"].to_csv(
+                os.path.join(export_dir, "Y_init.csv"), index=False)
+
+        for obj_name in self.history.keys():
+            df = self._get_history(self.history, obj_name)
+            df.to_csv(os.path.join(export_dir, f"log_{obj_name}.csv"))
 
     def compile(self):
 
@@ -173,7 +199,7 @@ class Optimizer:
             self.strategy.constrainter.user_constraint_func = (
                 self.user_constraint_func)
 
-    def run(self, n_gen, population_size=500, logfile=False):
+    def run(self, n_gen, population_size=500):
         """run evolutional optimization
         Todo: 最初と最後だけIndividualになる方式で
 
@@ -185,7 +211,7 @@ class Optimizer:
             number of generation
         """
         logger = get_logger()
-        logger.info(f"Settings:\n{self.show_config(stdout=False)}")
+        logger.info(f"Settings:\n{self.show_config()}")
 
         history = defaultdict(lambda: {"Average": [],
                                        "MAX": [],
@@ -237,17 +263,6 @@ class Optimizer:
 
         return next_population, stats
 
-    def save_config(self, path=None):
-        path = "config.json" if not path else path
-        raise NotImplementedError()
-
-    def show_config(self, stdout=True):
-        config = self.config.to_json(indent=2, ensure_ascii=False)
-        if stdout:
-            print(config)
-        else:
-            return config
-
     def _get_limits(self, sample):
         limits = {}
         for col in sample.columns:
@@ -286,11 +301,11 @@ class Optimizer:
         pareto_fitness = pd.DataFrame(pareto_fitness,
                                       columns=self.config.objective_names)
 
-        self.pareto_front["X"] = pareto_front
-        self.pareto_front["Y"] = pareto_fitness
+        self.pareto_front["X_pareto"] = pareto_front
+        self.pareto_front["Y_pareto"] = pareto_fitness
 
-        self.pareto_front["sample_X"] = self.samples
-        self.pareto_front["sample_Y"] = pd.DataFrame(
+        self.pareto_front["X_init"] = self.samples
+        self.pareto_front["Y_init"] = pd.DataFrame(
             self.evaluator.evaluate(self.samples),
             columns=self.config.objective_names)
 

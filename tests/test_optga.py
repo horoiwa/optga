@@ -56,7 +56,7 @@ class Testoptga:
     def test_GA(self):
         self.optimizer.run(population_size=300, n_gen=10)
 
-        X = self.optimizer.pareto_front["X"]
+        X = self.optimizer.pareto_front["X_pareto"]
         for i in range(X.shape[0]):
             row = X.iloc[i, :]
             assert row["2"] in [0, 1, 2]
@@ -66,3 +66,4 @@ class Testoptga:
             assert row[["8", "9", "10"]].sum() == pytest.approx(1.0, 0.01)
             assert row[["11", "12"]].sum() <= 1.0 + 0.01
             assert row[["11", "12"]].sum() >= 0.01
+

@@ -41,14 +41,30 @@ class TestIO:
 
         self.export_dir = os.path.join(os.path.expanduser("~"), "optga")
 
+        if not os.path.exists(self.export_dir):
+            os.makedirs(self.export_dir)
+
     def teardown_method(self):
         del self.optimizer
         shutil.rmtree(self.export_dir)
 
-    def test_export_config(self):
-        self.optimizier.export_config(
+    def test_io_config(self):
+        self.optimizer.export_config(
             os.path.join(self.export_dir, "config.json"))
-
-    def test_reload_config(self):
         self.optimizer.reload_config(
             os.path.join(self.export_dir, "config.json"))
+        self.optimizer.show_config()
+
+    def test_export_result(self):
+        self.optimizer.run(population_size=300, n_gen=10)
+        self.optimizer.export_result(self.export_dir)
+        assert os.path.exists(os.path.join(self.export_dir, "X_init.csv"))
+        assert os.path.exists(os.path.join(self.export_dir, "Y_init.csv"))
+
+        assert os.path.exists(os.path.join(self.export_dir, "X_pareto.csv"))
+        assert os.path.exists(os.path.join(self.export_dir, "Y_pareto.csv"))
+
+        assert os.path.exists(
+            os.path.join(self.export_dir, "log_ones.csv"))
+        assert os.path.exists(
+            os.path.join(self.export_dir, "log_linear_min.csv"))
