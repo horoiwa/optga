@@ -96,14 +96,15 @@ def _onehot(arr, valuerange):
     for i in range(arr.shape[0]):
         selected_col = np.random.choice(columns[nonzero_elements[i]])
         selected_val = arr[i, selected_col]
-        if selected_val <= upperlim and selected_val >= lowerlim:
+        if (selected_val <= upperlim) and (selected_val >= lowerlim):
             onehot_arr[i, selected_col] = selected_val
         else:
             onehot_arr[i, selected_col] = constants[i]
 
     return onehot_arr
 
-@jit(f8[:,:](f8[:,:], f8[:]), nopython=True)
+
+@jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
 def _sumtotal(arr, valuerange):
     #: test onehot constraints
     lowerlim = valuerange[0]

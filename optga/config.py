@@ -64,15 +64,18 @@ class OptConfig:
     @property
     def group_variables(self):
         groups = []
-        for group in self.onehot_constraints:
+        for group in self.onehot_groups.values():
             groups.append(group)
         for group in self.sumtotal_groups.values():
             groups.append(group)
         return groups
 
     @property
-    def group_variable_indices(self):
-        pass
+    def group_variables_indices(self):
+        groups = []
+        for group in self.group_variables:
+            groups.append([self.fname_to_idx(fname) for fname in group])
+        return groups
 
     @property
     def indices_fnames_dict(self):

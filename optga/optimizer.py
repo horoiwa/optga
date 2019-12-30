@@ -55,7 +55,7 @@ class Optimizer:
         try:
             model.predict(self.samples)
         except:
-            raise Exception("Invalid predict model")
+            raise Exception("Invalid samples, Try if model.predict(samples) works")
 
         if direction not in ["maximize", "minimize"]:
             raise KeyError(f'direction must be "maximize" or "minimize"')

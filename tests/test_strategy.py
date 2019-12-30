@@ -1,3 +1,7 @@
+import pytest
+
+import pandas as pd
+
 from optga.optimizer import Optimizer
 from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
@@ -19,7 +23,10 @@ class TestMate:
         model2 = get_linear_model(length)
         optimizer.add_objective("linear_min", model2, direction="minimize")
 
-        optimizer.add_onehot_groupconstraint(group=["3", "4", "5"])
+        optimizer.add_discrete_constraint(fname="1", constraints=[0, 1, 2])
+
+        optimizer.add_onehot_groupconstraint(group=["3", "4", "5"],
+                                             lower=1, upper=1)
 
         optimizer.add_sumtotal_groupconstraint(group=["7", "8", "9"],
                                                lower=2, upper=2)
@@ -33,8 +40,34 @@ class TestMate:
     def teardown_method(self):
         del self.optimizer
 
-    def test_mate(self):
-        children = self.strategy.mate(self.init_population)
+    def test_init_population(self):
+        population = self.init_population
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row["1"] in [0, 1, 2]
+            assert row[["3", "4", "5"]].sum() == pytest.approx(1.0, 0.01)
+            assert row[["7", "8", "9"]].sum() == pytest.approx(2.0, 0.01)
+
+        for group in self.optimizer.config.group_variables:
+            assert group in [["3", "4", "5"], ["7", "8", "9"]]
+
+        for group in self.optimizer.config.group_variables_indices:
+            assert group in [[3, 4, 5], [7, 8, 9]]
+
+    def test_mate_simple(self):
+        population = pd.DataFrame(self.strategy.mate(self.init_population),
+                                  columns=self.optimizer.config.feature_names)
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row["1"] in [0, 1, 2]
+
+    def est_mate_group(self):
+        population = pd.DataFrame(self.strategy.mate(self.init_population),
+                                  columns=self.optimizer.config.feature_names)
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row[["3", "4", "5"]].sum() == pytest.approx(1.0, 0.01)
+            assert row[["7", "8", "9"]].sum() == pytest.approx(2.0, 0.01)
 
     def test_mutate(self):
-        children = self.strategy.mutate(self.init_population)
+        population = self.strategy.mutate(self.init_population)

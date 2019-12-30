@@ -46,7 +46,7 @@ class TestIO:
 
     def teardown_method(self):
         del self.optimizer
-        shutil.rmtree(self.export_dir)
+        #shutil.rmtree(self.export_dir)
 
     def test_io_config(self):
         self.optimizer.export_config(
@@ -56,7 +56,8 @@ class TestIO:
         self.optimizer.show_config()
 
     def test_export_result(self):
-        self.optimizer.run(population_size=300, n_gen=10)
+        self.optimizer.run(population_size=500, n_gen=10)
+
         self.optimizer.export_result(self.export_dir)
         assert os.path.exists(os.path.join(self.export_dir, "X_init.csv"))
         assert os.path.exists(os.path.join(self.export_dir, "Y_init.csv"))
