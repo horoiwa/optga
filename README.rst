@@ -16,7 +16,7 @@ Overview
 
 Optga is framework to find out optimal input of your machine learning model in order to achieve desired outcomes.
 
-Especially useful when one input have one or more objective variables.
+Especially useful when one input two or more objective variables.
 
 Such situation is often the case in **scientific problems**, including novel materials development.
 

@@ -27,10 +27,12 @@ class Constrainter:
         else:
             population = population.astype(np.float64)
 
-        population = self.add_onehot_constraint(population)
-        population = self.add_sumtotal_constraint(population)
-        population = self.add_discrete_constraint(population)
-
+        if self.onehot_constraints is not None:
+            population = self.add_onehot_constraint(population)
+        if self.sumtotal_constraints is not None:
+            population = self.add_sumtotal_constraint(population)
+        if self.discrete_constraints is not None:
+            population = self.add_discrete_constraint(population)
         if self.user_constraint_func is not None:
             population = pd.DataFrame(population,
                                       columns=self.config.feature_names)
