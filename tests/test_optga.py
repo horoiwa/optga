@@ -7,7 +7,7 @@ from optga.support import (get_linear_model, get_onemax_model,
 
 
 def test_version():
-    assert __version__ == '0.1.0'
+    assert __version__ == '0.1.1'
 
 
 class Testoptga:
