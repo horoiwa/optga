@@ -64,10 +64,12 @@ class OptConfig:
     @property
     def group_variables(self):
         groups = []
-        for group in self.onehot_groups.values():
-            groups.append(group)
-        for group in self.sumtotal_groups.values():
-            groups.append(group)
+        if self.onehot_groups is not None:
+            for group in self.onehot_groups.values():
+                groups.append(group)
+        if self.sumtotal_groups is not None:
+            for group in self.sumtotal_groups.values():
+                groups.append(group)
         return groups
 
     @property
