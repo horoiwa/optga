@@ -1,0 +1,87 @@
+{
+  "mate": "MateCxTwoPoints",
+  "mutate": "MutateUniform",
+  "select": "SelectNSGA2",
+  "birth_rate": 3,
+  "mutpb": 0.2,
+  "indpb": 0.1,
+  "objectives": {
+    "Price": "minimize",
+    "Age": "minimize"
+  },
+  "limits": {
+    "CRIM": [
+      0.00632,
+      88.9762
+    ],
+    "ZN": [
+      0.0,
+      100.0
+    ],
+    "INDUS": [
+      0.46,
+      27.74
+    ],
+    "CHAS": [
+      0.0,
+      1.0
+    ],
+    "NOX": [
+      0.385,
+      0.871
+    ],
+    "RM": [
+      3.561,
+      8.78
+    ],
+    "DIS": [
+      1.1296,
+      12.1265
+    ],
+    "RAD": [
+      1.0,
+      24.0
+    ],
+    "TAX": [
+      187.0,
+      711.0
+    ],
+    "PTRATIO": [
+      12.6,
+      22.0
+    ],
+    "B": [
+      0.32,
+      396.9
+    ],
+    "LSTAT": [
+      1.73,
+      37.97
+    ]
+  },
+  "discrete_constraints": {
+    "CHAS": [
+      0,
+      1
+    ],
+    "ZN": [
+      0,
+      100
+    ],
+    "RAD": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      24
+    ]
+  },
+  "onehot_groups": null,
+  "onehot_constraints": null,
+  "sumtotal_groups": null,
+  "sumtotal_constraints": null
+}
