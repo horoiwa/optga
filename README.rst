@@ -52,9 +52,21 @@ Exploring the trade-off between house prices and age in Boston dataset.
 
 .. code-block:: python
 
-    import os
-    print("hello world")
+    import optga
+    from optga.optimizer import Optimizer
+    optimizer = Optimizer(samples=X)
+
+    #: Add predicive model
+    optimizer.add_objective("Price", model_price, direction="minimize")
+    optimizer.add_objective("Age", model_age, direction="minimize")
+
+    #: Add constraints on explanatory variables
+    optimizer.add_discrete_constraint("CHAS", [0, 1])
+    optimizer.add_discrete_constraint("ZN", [0, 100])
+    optimizer.add_discrete_constraint("RAD", list(range(1, 9)) + [24])
+
+    #: Run optimization
+    optimizer.run(n_gen=300, population_size=500)
 
 
-
-See full examples on .
+See full examples on example/1_BostonHousingPrice.ipynb.
