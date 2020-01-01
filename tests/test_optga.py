@@ -6,10 +6,6 @@ from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
 
 
-def test_version():
-    assert __version__ == '0.1.1'
-
-
 class Testoptga:
 
     def setup_method(self):
