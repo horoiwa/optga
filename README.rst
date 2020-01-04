@@ -1,6 +1,6 @@
-======
-Optga: multi-objective optimization framework for machine learning predictions
-======
+==========================================================================================
+Optga: multi-objective optimization framework for scientific machine learning projects
+==========================================================================================
 
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
     :target: https://travis-ci.org/horoiwa/optga
@@ -9,30 +9,34 @@ Optga: multi-objective optimization framework for machine learning predictions
 .. image:: https://img.shields.io/badge/license-MIT-blue
     :target: https://spdx.org/licenses/MIT
 
-**Finding out optimal inputs of your machine learning model in order to balance multipule objective variables in trade-off relationship**
+**Finding out pareto-optimum inputs of your machine learning model in order to balance multipule target variables in trade-off relationship**
 
 Overview
 ========
 
-Optga is a framework to find out optimal input of your machine learning model in order to achieve desired outcomes.
+Real world machine learning projects in **scientific problems** often have two or more target variables in trade-off relationship.
 
-Especially useful when one input two or more objective variables.
+For example:
 
-Such situation is often the case in **scientific problems**, including novel materials development.
+* Speed and fuel efficiency in automobiles.
 
-    *Our dataset has three obejctive variables; Y1, Y2, and Y3.
-    Fortunately, they are well predicted by machine learing models.*
+* Lower voltage and higher capacity in Li-ion batteries.
 
-    *Then, how can we optimize these objective variables simultaneously?*
+* Wing weight and lift in aircrafts
 
+* Permeability and selectivity in polymer membranes
+
+
+After you have successfully built predictive models for each target property,
+Optga finds out pareto-optimum inputs of your machine learning models in order to help with dicision making and achieve desired outcomes.
 
 Key features
 ============
 
-* Rapid multi-objective optimization by genetic algorithm (NSGA2)
-
 * Support constraints specific to machine learning inputs.
   (e.g. Onehot constraint)
+
+* Rapid multi-objective optimization by genetic algorithm (NSGA2)
 
 * Easy user interface
 
