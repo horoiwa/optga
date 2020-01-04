@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "optga"
 version = "0.1.4"
-description = "Framework to find out optimal input of machine learning model"
+description = "Framework to find out pareto-optimum inputs of your machine learning models"
 authors = ["horoiwa <horoiwa195@gmail.com>"]
 
 [tool.poetry.dependencies]
