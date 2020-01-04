@@ -1,5 +1,5 @@
 ======
-Optga
+Optga: multi-objective optimization framework for machine learning predictions
 ======
 
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
@@ -14,7 +14,7 @@ Optga
 Overview
 ========
 
-Optga is framework to find out optimal input of your machine learning model in order to achieve desired outcomes.
+Optga is a framework to find out optimal input of your machine learning model in order to achieve desired outcomes.
 
 Especially useful when one input two or more objective variables.
 
