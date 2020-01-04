@@ -56,8 +56,23 @@ Exploring the trade-off between house prices and age in Boston dataset.
 
 .. code-block:: python
 
+    import pandas as pd
+    from sklearn.datasets import load_boston
+    from sklearn.ensemble import RandomForestRegressor
     import optga
     from optga.optimizer import Optimizer
+
+    #: Load boston housing price datasets
+    df =  pd.DataFrame(load_boston().data,
+                       columns=load_boston().feature_names)
+    X = df.drop(["AGE"], 1)
+    y_price = pd.DataFrame(boston.target, columns=["Price"])
+    y_age = pd.DataFrame(df["AGE"])
+
+    #: create predictive models
+    model_price = RandomForestRegressor().fit(X, y_price)
+    model_age = RandomForestRegressor().fit(X, y_age)
+
     optimizer = Optimizer(samples=X)
 
     #: Add predicive model
@@ -69,8 +84,14 @@ Exploring the trade-off between house prices and age in Boston dataset.
     optimizer.add_discrete_constraint("ZN", [0, 100])
     optimizer.add_discrete_constraint("RAD", list(range(1, 9)) + [24])
 
-    #: Run optimization
-    optimizer.run(n_gen=300, population_size=500)
+    #: Run optimization and export results
+    optimizer.run(n_gen=300, population_size=300)
+    optimizer.export_result("boston_result")
 
 
 See full examples on example/1_BostonHousingPrice.ipynb.
+
+ToDo
+====
+
+* Add island strategy as multi-processing GA optimization.
