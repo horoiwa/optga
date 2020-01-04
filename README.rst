@@ -28,7 +28,7 @@ For example:
 
 
 After you have successfully built predictive models for each target variable,
-Optga finds out pareto-optimum inputs of your machine learning models in order to help with dicision making and achieve desired outcomes.
+Optga finds out pareto-optimum inputs of your machine learning models in order to help making a dicision and achieve desired outcomes.
 
 Key features
 ============
