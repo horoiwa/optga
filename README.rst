@@ -1,5 +1,5 @@
 ==============================================================================
-Optga: multi-objective optimization for ML predictions
+Optga: multi-objective optimization of ML-model outputs
 ==============================================================================
 
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
