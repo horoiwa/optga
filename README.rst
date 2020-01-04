@@ -1,6 +1,6 @@
-==========================================================================================
-Optga: multi-objective optimization framework for scientific machine learning projects
-==========================================================================================
+==============================================================================
+Optga: multi-objective optimization of machine learning predictions
+==============================================================================
 
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
     :target: https://travis-ci.org/horoiwa/optga
@@ -9,7 +9,7 @@ Optga: multi-objective optimization framework for scientific machine learning pr
 .. image:: https://img.shields.io/badge/license-MIT-blue
     :target: https://spdx.org/licenses/MIT
 
-**Finding out pareto-optimum inputs of your machine learning model in order to balance multipule target variables in trade-off relationship**
+**Finding out pareto-optimum inputs of your machine learning models in order to balance multipule target variables in trade-off relationship**
 
 Overview
 ========
@@ -27,7 +27,7 @@ For example:
 * Permeability and selectivity in polymer membranes
 
 
-After you have successfully built predictive models for each target property,
+After you have successfully built predictive models for each target variable,
 Optga finds out pareto-optimum inputs of your machine learning models in order to help with dicision making and achieve desired outcomes.
 
 Key features
