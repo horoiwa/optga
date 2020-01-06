@@ -43,7 +43,7 @@ Key features
 Install
 =======
 
-If you use conda, `conda update numba` may be required before pip install.
+If you use conda, ``conda update numba`` may be required before pip install.
 
 .. code-block:: bash
 
