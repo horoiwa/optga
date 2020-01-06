@@ -15,13 +15,15 @@ class Testoptga:
         optimizer = Optimizer(sample_data=init_popualtion)
 
         model1 = get_onemax_model()
-        optimizer.add_objective("ones", model1, direction="maximize")
+        optimizer.add_objective("ones", model1.predict, direction="maximize")
 
         model2 = get_linear_model(length)
-        optimizer.add_objective("linear_min", model2, direction="minimize")
+        optimizer.add_objective("linear_min", model2.predict,
+                                direction="minimize")
 
         model3 = get_linear_model(length)
-        optimizer.add_objective("linear_max", model3, direction="maximize")
+        optimizer.add_objective("linear_max", model3.predict,
+                                direction="maximize")
 
         optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
         optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
