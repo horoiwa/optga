@@ -1,5 +1,5 @@
 ==============================================================================
-Optga: multi-objective optimization of ML-model outputs
+Optga: multi-objective optimizer for ML-model outputs
 ==============================================================================
 
 .. image:: https://travis-ci.org/horoiwa/optga.svg?branch=master
@@ -33,10 +33,10 @@ Optga finds out pareto-optimum inputs of your machine learning models in order t
 Key features
 ============
 
-* Support constraints specific to machine learning inputs.
-  (e.g. Onehot constraint)
+* Rapid multi-objective optimization by genetic algorithm (NSGA2) with numba
 
-* Rapid multi-objective optimization by genetic algorithm (NSGA2)
+* Support various constraints specific to machine learning inputs.
+  (e.g. Onehot constraint, descrete constraint)
 
 * Easy user interface
 
