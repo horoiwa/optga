@@ -32,7 +32,7 @@ class Optimizer:
         if not isinstance(sample_data, pd.DataFrame):
             raise Exception("Sample data must be pd.DataFrame")
 
-        self.sample_data = sample_data
+        self.sample_data = sample_data.astype(np.float64)
 
         self.config = OptConfig()
 
