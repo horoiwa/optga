@@ -32,7 +32,7 @@ class Optimizer:
         if not isinstance(sample_data, pd.DataFrame):
             raise Exception("Sample data must be pd.DataFrame")
 
-        self.sample_data = sample_data
+        self.sample_data = sample_data.astype(np.float64)
 
         self.config = OptConfig()
 
@@ -68,6 +68,10 @@ class Optimizer:
             self.config.objectives[objname] = direction
 
     def add_valuerange_constraint(self, fname, lower, upper):
+        lower, upper = float(lower), float(upper)
+        if lower > upper:
+            lower, upper = upper, lower
+
         try:
             self.config.limits[fname] = [lower, upper]
         except KeyError:
@@ -92,6 +96,7 @@ class Optimizer:
         if fname not in self.config.feature_names:
             raise Exception(f"{fname} not in {self.config.feature_names}")
 
+        constraints = [float(val) for val in constraints]
         if self.config.discrete_constraints is None:
             self.config.discrete_constraints = {fname: constraints}
         else:
@@ -102,6 +107,7 @@ class Optimizer:
             if fname not in self.config.feature_names:
                 raise Exception(f"{fname} not in {self.config.feature_names}")
 
+        lower, upper = float(lower), float(upper)
         if lower > upper:
             lower, upper = upper, lower
 
@@ -131,6 +137,7 @@ class Optimizer:
             if fname not in self.config.feature_names:
                 raise Exception(f"{fname} not in {self.config.feature_names}")
 
+        lower, upper = float(lower), float(upper)
         if lower > upper:
             lower, upper = upper, lower
 

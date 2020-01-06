@@ -56,6 +56,7 @@ class TestIO:
         self.optimizer.show_config()
 
     def test_export_result(self):
+        self.optimizer.show_config()
         self.optimizer.run(population_size=500, n_gen=10)
 
         self.optimizer.export_result(self.export_dir)

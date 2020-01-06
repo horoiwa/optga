@@ -50,6 +50,7 @@ class Testoptga:
         del self.optimizer
 
     def test_GA(self):
+        self.optimizer.show_config()
         self.optimizer.run(population_size=500, n_gen=10)
 
         X = self.optimizer.pareto_front["X_pareto"]
