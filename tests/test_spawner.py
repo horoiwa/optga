@@ -13,7 +13,7 @@ class TestSpawner:
 
         init_population = get_onemax_samples(pop_size, length)
 
-        optimizer = Optimizer(samples=init_population)
+        optimizer = Optimizer(sample_data=init_population)
 
         model1 = get_onemax_model()
         optimizer.add_objective("ones", model1, direction="maximize")

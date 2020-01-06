@@ -27,12 +27,12 @@ def get_logger():
 
 class Optimizer:
 
-    def __init__(self, samples):
+    def __init__(self, sample_data):
 
-        if not isinstance(samples, pd.DataFrame):
+        if not isinstance(sample_data, pd.DataFrame):
             raise Exception("Sample data must be pd.DataFrame")
 
-        self.samples = samples
+        self.sample_data = sample_data
 
         self.config = OptConfig()
 
@@ -42,7 +42,7 @@ class Optimizer:
 
         self.user_constraint_func = None
 
-        self.config.limits = self._get_limits(self.samples)
+        self.config.limits = self._get_limits(self.sample_data)
 
         self.models = {}
 
@@ -51,11 +51,11 @@ class Optimizer:
         self.pareto_front = {}
 
     def add_objective(self, objname, model, direction):
-        #: validate model using samples
+        #: validate model using sample_data
         try:
-            model.predict(self.samples)
+            model.predict(self.sample_data)
         except:
-            raise Exception("Invalid samples, Try if model.predict(samples) works")
+            raise Exception("Invalid sample_data, Try if model.predict(sample_data) works")
 
         if direction not in ["maximize", "minimize"]:
             raise KeyError(f'direction must be "maximize" or "minimize"')
@@ -304,9 +304,9 @@ class Optimizer:
         self.pareto_front["X_pareto"] = pareto_front
         self.pareto_front["Y_pareto"] = pareto_fitness
 
-        self.pareto_front["X_init"] = self.samples
+        self.pareto_front["X_init"] = self.sample_data
         self.pareto_front["Y_init"] = pd.DataFrame(
-            self.evaluator.evaluate(self.samples),
+            self.evaluator.evaluate(self.sample_data),
             columns=self.config.objective_names)
 
     def _validate(self):
@@ -325,6 +325,6 @@ class Optimizer:
 
 class PallarelOptimizer(Optimizer):
 
-    def __init__(self, samples, n_jobs):
-        super().__init__(samples)
+    def __init__(self, sample_data, n_jobs):
+        super().__init__(sample_data)
         self.n_jobs = n_jobs

@@ -73,7 +73,7 @@ Exploring the trade-off between house prices and age in Boston dataset.
     model_price = RandomForestRegressor().fit(X, y_price)
     model_age = RandomForestRegressor().fit(X, y_age)
 
-    optimizer = Optimizer(samples=X)
+    optimizer = Optimizer(sample_data=X)
 
     #: Add predicive model
     optimizer.add_objective("Price", model_price, direction="minimize")

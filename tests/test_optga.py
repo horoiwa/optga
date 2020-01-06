@@ -12,7 +12,7 @@ class Testoptga:
 
         length = 20
         init_popualtion = get_onemax_samples(500, length)
-        optimizer = Optimizer(samples=init_popualtion)
+        optimizer = Optimizer(sample_data=init_popualtion)
 
         model1 = get_onemax_model()
         optimizer.add_objective("ones", model1, direction="maximize")
@@ -50,7 +50,7 @@ class Testoptga:
         del self.optimizer
 
     def test_GA(self):
-        self.optimizer.run(population_size=500, n_gen=100)
+        self.optimizer.run(population_size=500, n_gen=10)
 
         X = self.optimizer.pareto_front["X_pareto"]
         for i in range(X.shape[0]):
