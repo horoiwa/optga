@@ -43,9 +43,9 @@ Key features
 Install
 =======
 
-.. code-block:: bash
+If you use conda, `conda update numba` may be required before pip install.
 
-    conda update numba #conda only
+.. code-block:: bash
 
     pip install optga
 
