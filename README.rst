@@ -14,7 +14,7 @@ Optga: multi-objective optimizer for ML-model outputs
 Overview
 ========
 
-In real world, **machine learning projects of scientific problems** often have two or more target variables which in trade-off relationship.
+In real world, **machine learning projects dealing with scientific issues** often have two or more target variables which in trade-off relationship.
 
 For example:
 
