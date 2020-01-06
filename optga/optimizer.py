@@ -50,17 +50,20 @@ class Optimizer:
 
         self.pareto_front = {}
 
-    def add_objective(self, objname, model, direction):
+    def add_objective(self, objname, func, direction):
         #: validate model using sample_data
         try:
-            model.predict(self.sample_data)
+            fitness = func(self.sample_data)
         except:
-            raise Exception("Invalid sample_data, Try if model.predict(sample_data) works")
+            raise Exception("Invalid sample_data, Try if func(sample_data) work correctly")
+
+        if fitness.shape[0] != self.sample_data.shape[0]:
+            raise Exception("Fitness must be shape of (sample_size, 1)")
 
         if direction not in ["maximize", "minimize"]:
             raise KeyError(f'direction must be "maximize" or "minimize"')
 
-        self.models[objname] = model
+        self.models[objname] = func
 
         if not self.config.objectives:
             self.config.objectives = {objname: direction}

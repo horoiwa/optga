@@ -77,9 +77,9 @@ Exploring the trade-off between house prices and age in Boston dataset.
 
     optimizer = Optimizer(sample_data=X)
 
-    #: Add predicive model
-    optimizer.add_objective("Price", model_price, direction="minimize")
-    optimizer.add_objective("Age", model_age, direction="minimize")
+    #: Add scoring function
+    optimizer.add_objective("Price", model_price.predict, direction="minimize")
+    optimizer.add_objective("Age", model_age.predict, direction="minimize")
 
     #: Add constraints on explanatory variables
     optimizer.add_discrete_constraint("CHAS", [0, 1])
