@@ -2,7 +2,7 @@
   "mate": "MateCxTwoPoints",
   "mutate": "MutateUniform",
   "select": "SelectNSGA2",
-  "birth_rate": 3,
+  "birth_rate": 2,
   "mutpb": 0.2,
   "indpb": 0.1,
   "objectives": {
@@ -61,23 +61,23 @@
   },
   "discrete_constraints": {
     "CHAS": [
-      0,
-      1
+      0.0,
+      1.0
     ],
     "ZN": [
-      0,
-      100
+      0.0,
+      100.0
     ],
     "RAD": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      24
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      7.0,
+      8.0,
+      24.0
     ]
   },
   "onehot_groups": null,

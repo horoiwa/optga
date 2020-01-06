@@ -1,12 +1,14 @@
 import copy
 import os
 import shutil
+import time
 import uuid
 from collections import defaultdict
 from logging import DEBUG, Formatter, StreamHandler, getLogger
 
 import numpy as np
 import pandas as pd
+
 from optga.config import OptConfig
 from optga.evaluater import Evaluator
 from optga.spawner import Spawner
@@ -15,7 +17,7 @@ from optga.tools.nsga2 import get_paretofront
 
 
 def get_logger():
-    logger = getLogger("RUN_GA")
+    logger = getLogger(str(uuid.uuid4()))
     logger.setLevel(DEBUG)
     stream_handler = StreamHandler()
     handler_format = Formatter(
@@ -55,10 +57,21 @@ class Optimizer:
         try:
             fitness = func(self.sample_data)
         except:
-            raise Exception("Invalid sample_data, Try if func(sample_data) work correctly")
+            raise Exception(f"""\
+                             Invalid sample_data, \
+                             Try if func(sample_data) work correctly""")
+
+        if not isinstance(fitness, np.ndarray):
+            raise TypeError(f"""\
+                             Output of func(sample_data) must be ndarray, \
+                             this is {type(fitness)}""")
 
         if fitness.shape[0] != self.sample_data.shape[0]:
-            raise Exception("Fitness must be shape of (sample_size, 1)")
+            raise Exception(f"""\
+                             Output of func(sample_data) must be shape of \
+                             (sample_size, 1) or (sample_size,)\
+                             This is {fitness.shape}
+                            """)
 
         if direction not in ["maximize", "minimize"]:
             raise KeyError(f'direction must be "maximize" or "minimize"')
@@ -209,7 +222,7 @@ class Optimizer:
             self.strategy.constrainter.user_constraint_func = (
                 self.user_constraint_func)
 
-    def run(self, n_gen, population_size=500):
+    def run(self, n_gen, population_size=500, logging_per=50):
         """run evolutional optimization
         Todo: 最初と最後だけIndividualになる方式で
 
@@ -221,7 +234,6 @@ class Optimizer:
             number of generation
         """
         logger = get_logger()
-        logger.info(f"Settings:\n{self.show_config()}")
 
         history = defaultdict(lambda: {"Average": [],
                                        "MAX": [],
@@ -229,6 +241,8 @@ class Optimizer:
 
         population = self.spawn_population(population_size).values
         self._validate()
+
+        time_start = time.time()
         for n in range(n_gen):
             population, stats = self.run_generation(population,
                                                     population_size)
@@ -241,13 +255,19 @@ class Optimizer:
                 history[obj_name]["MIN"].append(
                     stats.loc[obj_name, "MIN"])
 
-            if n % 10 == 0:
+            if n % logging_per == 0:
+                time_end = time.time()
                 logger.info(f"====Generation {n} ====")
                 logger.info(stats)
 
+                if n != 0:
+                    time_per_gen = (time_end - time_start)/logging_per
+                    logger.info(f"Average time per generation: {time_per_gen}")
+
+                time_start = time.time()
+
         logger.info("GA optimization finished gracefully")
         for obj_name in self.config.objective_names:
-            logger.info(f"====GA RESULT: {obj_name} ====")
             df = self._get_history(history, obj_name)
             self.history[obj_name] = df
 

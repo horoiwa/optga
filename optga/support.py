@@ -13,7 +13,7 @@ def get_onemax_model():
         def predict(self, samples):
             if not isinstance(samples, pd.DataFrame):
                 raise TypeError("Samples must be DataFrame")
-            return samples.sum(1)
+            return samples.sum(1).values
 
     return model()
 

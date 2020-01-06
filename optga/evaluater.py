@@ -15,5 +15,6 @@ class Evaluator:
     def evaluate(self, population):
         fitness = np.zeros((population.shape[0], len(self.objective_names)))
         for i, oname in enumerate(self.objective_names):
-            fitness[:, i] = self.models[oname](population)
+            scores = self.models[oname](population).flatten()
+            fitness[:, i] = scores
         return fitness
