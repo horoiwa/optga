@@ -40,14 +40,14 @@ Key features
 
 * Easy user interface
 
-Install
+Installation
 =======
 
-If you use conda, ``conda update numba`` may be required before pip install.
-
 .. code-block:: bash
-
+    conda install numba
+    conda update numba
     pip install optga
+
 
 
 Getting started

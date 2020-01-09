@@ -1,6 +1,7 @@
 import pytest
+import os
+import shutil
 
-from optga import __version__
 from optga.optimizer import Optimizer
 from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
@@ -47,12 +48,19 @@ class Testoptga:
         optimizer.add_user_constraint(user_func)
 
         self.optimizer = optimizer
+        self.tempdir = os.path.join(os.path.expanduser("~"), "temp")
+        if not os.path.exists(self.tempdir):
+            os.makedirs(self.tempdir)
 
     def teardown_method(self):
         del self.optimizer
+        shutil.rmtree(self.tempdir)
 
     def test_GA(self):
         self.optimizer.show_config()
+        self.optimizer.export_config(os.path.join(self.tempdir, "config.json"))
+        self.optimizer.reload_config(os.path.join(self.tempdir, "config.json"))
+
         self.optimizer.run(population_size=500, n_gen=10)
 
         X = self.optimizer.pareto_front["X_pareto"]

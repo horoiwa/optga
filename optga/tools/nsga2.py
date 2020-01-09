@@ -27,7 +27,7 @@ def get_paretofront(population, fitness):
 def get_dominatetable(fitness):
     n_fits = fitness.shape[0]
 
-    dominate_table = np.zeros((n_fits, n_fits), dtype=np.int64)
+    dominate_table = np.zeros((n_fits, n_fits)).astype(np.int64)
     for i in range(n_fits):
         for j in range(i+1, n_fits):
             fit_i = fitness[i]

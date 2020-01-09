@@ -19,10 +19,12 @@ class TestIO:
         optimizer = Optimizer(sample_data=init_population)
 
         model1 = get_onemax_model()
-        optimizer.add_objective("ones", model1.predict, direction="maximize")
+        optimizer.add_objective("ones", model1.predict,
+                                direction="maximize")
 
         model2 = get_linear_model(length)
-        optimizer.add_objective("linear_min", model2.predict, direction="minimize")
+        optimizer.add_objective("linear_min", model2.predict,
+                                direction="minimize")
 
         optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
         optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
@@ -60,13 +62,16 @@ class TestIO:
         self.optimizer.run(population_size=500, n_gen=10)
 
         self.optimizer.export_result(self.export_dir)
+
         assert os.path.exists(os.path.join(self.export_dir, "X_init.csv"))
         assert os.path.exists(os.path.join(self.export_dir, "Y_init.csv"))
+        assert os.path.exists(os.path.join(self.export_dir, "YX_init.csv"))
 
         assert os.path.exists(os.path.join(self.export_dir, "X_pareto.csv"))
         assert os.path.exists(os.path.join(self.export_dir, "Y_pareto.csv"))
+        assert os.path.exists(os.path.join(self.export_dir, "YX_pareto.csv"))
 
         assert os.path.exists(
-            os.path.join(self.export_dir, "log_ones.csv"))
+            os.path.join(self.export_dir, "history_ones.csv"))
         assert os.path.exists(
-            os.path.join(self.export_dir, "log_linear_min.csv"))
+            os.path.join(self.export_dir, "history_linear_min.csv"))

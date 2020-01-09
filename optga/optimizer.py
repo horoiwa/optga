@@ -200,15 +200,19 @@ class Optimizer:
                 os.path.join(export_dir, "X_pareto.csv"), index=False)
             self.pareto_front["Y_pareto"].to_csv(
                 os.path.join(export_dir, "Y_pareto.csv"), index=False)
+            self.pareto_front["YX_pareto"].to_csv(
+                os.path.join(export_dir, "YX_pareto.csv"), index=False)
 
             self.pareto_front["X_init"].to_csv(
                 os.path.join(export_dir, "X_init.csv"), index=False)
             self.pareto_front["Y_init"].to_csv(
                 os.path.join(export_dir, "Y_init.csv"), index=False)
+            self.pareto_front["YX_init"].to_csv(
+                os.path.join(export_dir, "YX_init.csv"), index=False)
 
         for obj_name in self.history.keys():
             df = self._get_history(self.history, obj_name)
-            df.to_csv(os.path.join(export_dir, f"log_{obj_name}.csv"))
+            df.to_csv(os.path.join(export_dir, f"history_{obj_name}.csv"))
 
     def compile(self):
 
@@ -330,14 +334,18 @@ class Optimizer:
         pareto_fitness = self.evaluator.evaluate(pareto_front)
         pareto_fitness = pd.DataFrame(pareto_fitness,
                                       columns=self.config.objective_names)
+        pareto_yX = pd.concat([pareto_front, pareto_fitness], 1)
 
         self.pareto_front["X_pareto"] = pareto_front
         self.pareto_front["Y_pareto"] = pareto_fitness
+        self.pareto_front["YX_pareto"] = pareto_yX
 
         self.pareto_front["X_init"] = self.sample_data
         self.pareto_front["Y_init"] = pd.DataFrame(
             self.evaluator.evaluate(self.sample_data),
             columns=self.config.objective_names)
+        self.pareto_front["YX_init"] = pd.concat(
+            [self.pareto_front["Y_init"], self.pareto_front["X_init"]], 1)
 
     def _validate(self):
         if not self.config.objectives:
