@@ -44,6 +44,7 @@ Installation
 =======
 
 .. code-block:: bash
+
     conda install numba
     conda update numba
     pip install optga
