@@ -42,7 +42,7 @@ Key features
 
 Installation
 =======
-
+If you are using conda, it's safe to install and update ``numba`` before installation.
 .. code-block:: bash
 
     conda install numba
