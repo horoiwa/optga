@@ -334,7 +334,7 @@ class Optimizer:
         pareto_fitness = self.evaluator.evaluate(pareto_front)
         pareto_fitness = pd.DataFrame(pareto_fitness,
                                       columns=self.config.objective_names)
-        pareto_yX = pd.concat([pareto_front, pareto_fitness], 1)
+        pareto_yX = pd.concat([pareto_fitness, pareto_front], 1)
 
         self.pareto_front["X_pareto"] = pareto_front
         self.pareto_front["Y_pareto"] = pareto_fitness

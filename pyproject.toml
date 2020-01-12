@@ -8,8 +8,8 @@ authors = ["horoiwa <horoiwa195@gmail.com>"]
 python = "^3.7"
 numpy = "^1.17"
 pandas = "^0.25.3"
-numba = "^0.46.0"
 dataclasses_json = "^0.3.7"
+numba = "^0.47.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
