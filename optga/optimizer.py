@@ -174,6 +174,16 @@ class Optimizer:
             self.strategy.constraint(self.spawner.spawn(n).values),
             columns=self.config.feature_names)
 
+    def set_mutpb(self, mutpb):
+        if (mutpb > 1) or (mutpb < 0):
+            raise Exception(f"mutpb must be between 0 and 1: input {mutpb}")
+        self.config.mutpb = mutpb
+
+    def set_indpb(self, indpb):
+        if (indpb > 1) or (indpb < 0):
+            raise Exception(f"indpb must be between 0 and 1: input {indpb}")
+        self.config.indpb = indpb
+
     def export_config(self, config_path):
         with open(config_path, "w") as f:
             f.write(self.config.to_json(indent=2, ensure_ascii=False))
