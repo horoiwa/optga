@@ -52,10 +52,13 @@ class Constrainter:
     def add_onehot_constraint(self, population):
         for uid, group in self.onehot_groups.items():
             columns = [self.config.fname_to_idx(fname) for fname in group]
+
             constraints = np.array(
-                self.onehot_constraints[uid]).astype(np.float64)
+                self.onehot_constraints[uid][:2]).astype(np.float64)
+            n = np.int64(self.onehot_constraints[uid][2])
+
             population[:, columns] = _onehot(population[:, columns],
-                                             constraints)
+                                             constraints, n)
 
         return population
 
@@ -78,8 +81,8 @@ def _discrete(arr, constraints):
     return arr
 
 
-@jit(f8[:, :](f8[:, :], f8[:]), nopython=True)
-def _onehot(arr, valuerange):
+@jit(f8[:, :](f8[:, :], f8[:], i8), nopython=True)
+def _onehot(arr, valuerange, n):
     #: if valuerange is [1, 1], equals to np.ones(arr.shape[0])
     lowerlim = valuerange[0]
     upperlim = valuerange[1]
@@ -87,19 +90,26 @@ def _onehot(arr, valuerange):
                                   upperlim,
                                   arr.shape[0])
     #: fill all zero rows (invalid rows) by constant
-    arr[arr.sum(1) == 0] = 1
+    arr[(arr != 0).sum(1) < n] = 1
 
     #: create onehot array
     onehot_arr = np.zeros(arr.shape)
     nonzero_elements = (arr != 0)
     columns = np.arange(arr.shape[1])
+
     for i in range(arr.shape[0]):
-        selected_col = np.random.choice(columns[nonzero_elements[i]])
-        selected_val = arr[i, selected_col]
-        if (selected_val <= upperlim) and (selected_val >= lowerlim):
-            onehot_arr[i, selected_col] = selected_val
-        else:
-            onehot_arr[i, selected_col] = constants[i]
+        selected_cols = np.random.choice(columns[nonzero_elements[i]],
+                                         n, replace=False)
+        selected_vals = arr[i][selected_cols]
+
+        for j in range(n):
+            selected_col = selected_cols[j]
+            selected_val = selected_vals[j]
+
+            if (selected_val <= upperlim) and (selected_val >= lowerlim):
+                onehot_arr[i][selected_col] = selected_val
+            else:
+                onehot_arr[i][selected_col] = constants[i]
 
     return onehot_arr
 

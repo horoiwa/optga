@@ -7,11 +7,11 @@ from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
 
 
-class TestSpawner:
+class TestConstraint:
 
     def setup_method(self):
         pop_size = 500
-        length = 10
+        length = 20
 
         init_population = get_onemax_samples(pop_size, length)
 
@@ -27,10 +27,16 @@ class TestSpawner:
         optimizer.add_discrete_constraint(fname="2", constraints=[0, 1, 2])
         optimizer.add_discrete_constraint(fname="3", constraints=[0, 1, 2])
 
-        optimizer.add_onehot_groupconstraint(group=["4", "5", "6"])
+        optimizer.add_onehot_groupconstraint(group=["4", "5", "6"], n=1)
 
         optimizer.add_sumtotal_groupconstraint(group=["7", "8", "9"],
                                                lower=2, upper=2)
+
+        optimizer.add_onehot_groupconstraint(group=["10", "11", "12", "13"],
+                                             n=3)
+
+        optimizer.add_onehot_groupconstraint(group=["14", "15"],
+                                             lower=3, upper=3)
 
         optimizer.compile()
         self.optimizer = optimizer
@@ -53,6 +59,19 @@ class TestSpawner:
         for idx in range(population.shape[0]):
             row = population.loc[idx, ["4", "5", "6"]]
             assert (row != 0).sum() == 1
+
+    def test_Nhot_constraint(self):
+        population = self.population
+        for idx in range(population.shape[0]):
+            row = population.loc[idx, ["10", "11", "12", "13"]]
+            assert (row != 0).sum() == 3
+
+    def test_onehot_constraint_not_one(self):
+        population = self.population
+        for idx in range(population.shape[0]):
+            row = population.loc[idx, ["14", "15"]]
+            assert (row != 0).sum() == 1
+            assert row.sum() == 3
 
     def test_sumtotal_constraint(self):
         population = self.population

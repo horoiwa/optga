@@ -7,7 +7,7 @@ from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
 
 
-class TestMate:
+class TestStrategy:
 
     def setup_method(self):
         pop_size = 500
@@ -82,6 +82,3 @@ class TestMate:
             assert row["1"] in [0, 1, 2]
             assert row[["3", "4", "5"]].sum() == pytest.approx(1.0, 0.01)
             assert row[["7", "8", "9"]].sum() == pytest.approx(2.0, 0.01)
-
-    def test_select(self):
-        pass
