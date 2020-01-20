@@ -118,7 +118,7 @@ class Optimizer:
         else:
             self.config.discrete_constraints[fname] = constraints
 
-    def add_onehot_groupconstraint(self, group, lower=1.0, upper=1.0):
+    def add_onehot_groupconstraint(self, group, lower=1.0, upper=1.0, n=1.0):
         for fname in group:
             if fname not in self.config.feature_names:
                 raise Exception(f"{fname} not in {self.config.feature_names}")
@@ -130,10 +130,10 @@ class Optimizer:
         uid = str(uuid.uuid4())
         if self.config.onehot_constraints is None:
             self.config.onehot_groups = {uid: group}
-            self.config.onehot_constraints = {uid: [lower, upper]}
+            self.config.onehot_constraints = {uid: [lower, upper, n]}
         else:
             self.config.onehot_groups.update({uid: group})
-            self.config.onehot_constraints.update({uid: [lower, upper]})
+            self.config.onehot_constraints.update({uid: [lower, upper, n]})
 
     def add_sumtotal_groupconstraint(self, group, lower, upper):
         """Add sum equal constraints

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "optga"
-version = "0.1.8"
+version = "0.1.9"
 description = "Framework to find pareto-optimum inputs of your machine learning models"
 authors = ["horoiwa <horoiwa195@gmail.com>"]
 
