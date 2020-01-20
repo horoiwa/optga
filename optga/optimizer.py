@@ -174,6 +174,13 @@ class Optimizer:
             self.strategy.constraint(self.spawner.spawn(n).values),
             columns=self.config.feature_names)
 
+    def evaluate_population(self, X):
+        self.compile()
+        fitness = pd.DataFrame(self.evaluator.evaluate(X),
+                               columns=self.config.objective_names)
+
+        return fitness
+
     def set_mutpb(self, mutpb):
         if (mutpb > 1) or (mutpb < 0):
             raise Exception(f"mutpb must be between 0 and 1: input {mutpb}")

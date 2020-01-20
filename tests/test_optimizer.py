@@ -1,3 +1,5 @@
+import numpy as np
+
 from optga.optimizer import Optimizer
 from optga.support import (get_linear_model, get_onemax_model,
                            get_onemax_samples)
@@ -11,16 +13,24 @@ class TestOptimizer:
 
         self.optimizer = Optimizer(sample_data=init_population)
 
+        model1 = get_onemax_model()
+
+        self.optimizer.add_objective("ones", model1.predict,
+                                     direction="maximize")
+
+        model2 = get_linear_model(10)
+
+        self.optimizer.add_objective("linear_min", model2.predict,
+                                     direction="minimize")
+
     def teardown_method(self):
 
         del self.optimizer
 
-    def test_setpb(self):
+    def test_evaluate(self):
 
-        self.optimizer.set_mutpb(0.5)
+        X = get_onemax_samples(500, 10)
 
-        self.optimizer.set_indpb(0.4)
+        fitness = self.optimizer.evaluate_population(X)
 
-        assert self.optimizer.config.mutpb == 0.5
-
-        assert self.optimizer.config.indpb == 0.4
+        assert np.all(fitness.columns == ["ones", "linear_min"])
