@@ -169,6 +169,20 @@ class Optimizer:
         self.user_constraint_func = func
 
     def spawn_population(self, n, mode="uniform"):
+        """Spawn initial population
+
+        Parameters
+        ----------
+        n : int
+            number of spawn samples
+        mode : str
+            "uniform" or "sobol", by default "uniform"
+
+        Returns
+        -------
+        population: pd.DataFrame
+            spawn population
+        """
         self.compile()
         return pd.DataFrame(
             self.strategy.constraint(self.spawner.spawn(n, mode=mode).values),
