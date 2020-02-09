@@ -168,10 +168,10 @@ class Optimizer:
     def add_user_constraint(self, func):
         self.user_constraint_func = func
 
-    def spawn_population(self, n):
+    def spawn_population(self, n, mode="uniform"):
         self.compile()
         return pd.DataFrame(
-            self.strategy.constraint(self.spawner.spawn(n).values),
+            self.strategy.constraint(self.spawner.spawn(n, mode=mode).values),
             columns=self.config.feature_names)
 
     def evaluate_population(self, X):
