@@ -35,8 +35,17 @@ class TestSpawner:
     def teardown_method(self):
         del self.optimizer
 
-    def test_spawn(self):
-        population = self.optimizer.spawn_population(100)
+    def test_spawn_uniform(self):
+        population = self.optimizer.spawn_population(100, mode="uniform")
+        for i in range(population.shape[0]):
+            row = population.iloc[i, :]
+            assert row["2"] in [0, 1, 2]
+            assert row["3"] in [0, 1, 2]
+            assert row[["4", "5"]].sum() == pytest.approx(1.0, 0.01)
+            assert row[["6", "7", "8"]].sum() == pytest.approx(5.0, 0.01)
+
+    def test_spawn_sobol(self):
+        population = self.optimizer.spawn_population(100, mode="sobol")
         for i in range(population.shape[0]):
             row = population.iloc[i, :]
             assert row["2"] in [0, 1, 2]
