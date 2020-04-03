@@ -9,7 +9,7 @@ Optga: multi-objective optimizer for ML-model outputs
 .. image:: https://img.shields.io/badge/license-MIT-blue
     :target: https://spdx.org/licenses/MIT
 
-**Finding out pareto-optimum inputs of your machine learning models in order to balance multipule target variables which in trade-off relationship**
+**Finding out pareto-optimum inputs of your machine learning models in order to balance multipule objective variables which in trade-off relationship**
 
 Overview
 ========
